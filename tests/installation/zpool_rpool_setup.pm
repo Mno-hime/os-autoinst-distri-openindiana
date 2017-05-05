@@ -10,16 +10,20 @@
 # Summary: Verify 'rpool' was setup correctly
 # Maintainer: Michal Nowak <mnowak@startmail.com>
 
-use base 'installbasetest';
+use base 'consoletest';
 use strict;
 use testapi;
 
 sub run() {
-    select_console 'root-console';
+    select_console 'user-console';
 
     assert_script_run 'zpool status';
     assert_script_run 'zpool status | grep "No known data errors"';
     assert_script_run 'zpool status | grep ' . get_var('ROOT_POOL_TYPE') if get_var('ROOT_POOL_TYPE');
+}
+
+sub test_flags() {
+    return {milestone => 1};
 }
 
 1;

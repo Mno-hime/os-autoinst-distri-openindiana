@@ -13,16 +13,18 @@
 use base 'installbasetest';
 use strict;
 use testapi;
-use utils qw(bootloader_dvd firstboot_setup reboot save_and_upload_log system_log_gathering);
+use utils;
 use installer 'text_installer';
 
 sub run() {
+    pre_bootmenu_setup;
     bootloader_dvd if get_var('BUILD') >= 20161030;
     firstboot_setup;
     assert_screen 'installation-menu';
     send_key '3';
     send_key 'ret';
-    sleep 60;    # Sleep to get rid of some visual disturbances
+    sleep 30;
+    type_string "clear\n";
     type_string "tail -F /tmp/install_log > /dev/$testapi::serialdev &\n";
     type_string "exit\n";
     assert_screen 'installation-menu';
@@ -32,27 +34,20 @@ sub run() {
 
     send_key 'f9';    # Quit
     assert_screen 'installation-menu';
+    wait_idle;        # Sometimes the '3\n' did not make it on i386
     send_key '3';
     send_key 'ret';
     assert_screen 'vt-installation';
 
     # Upload various logs
-    if (check_var('VIRSH_VMM_FAMILY', 'xen')) {
-        type_string "poweroff\n";
-        sleep 30;
-        #assert_shutdown;
-        reset_consoles;
-        sleep 30;
+    assert_script_run "iostat > /dev/$testapi::serialdev";
+    wait_idle;
+    assert_script_run "iostat > /dev/$testapi::serialdev";
+    unless (check_var('VIRSH_VMM_FAMILY', 'xen')) {
+        upload_logs('/tmp/install_log');
+        system_log_gathering(nosudo => 1);
     }
-    else {
-        assert_script_run 'cp /tmp/install_log /tmp/install_log.txt';
-        upload_logs('/tmp/install_log.txt');
-        system_log_gathering;
-        # Restart
-        type_string "exit\n";
-        send_key '5';
-        send_key 'ret';
-    }
+    power_action('reboot', nosudo => 1);
 }
 
 1;

@@ -1,6 +1,7 @@
 # OpenIndiana's openQA tests
 #
 # Copyright © 2017 Michal Nowak
+# Copyright © 2017 SUSE LLC
 #
 # Copying and distribution of this file, with or without modification,
 # are permitted in any medium without royalty provided the copyright
@@ -14,16 +15,17 @@ use Exporter;
 
 use strict;
 
-use testapi qw(is_serial_terminal :DEFAULT);
+use testapi qw(assert_shutdown :DEFAULT);
 
 our @EXPORT = qw(
   clear_console
-  reboot
-  poweroff
+  clear_and_verify_console
+  pre_bootmenu_setup
   bootloader_dvd
   bootloader_hdd
   firstboot_setup
   mate_change_resolution_1024_768
+  match_mate_desktop
   lightdm_login
   console_login
   wait_boot
@@ -33,7 +35,10 @@ our @EXPORT = qw(
   pkg_call
   save_and_upload_log
   system_log_gathering
+  core_files_gathering
   deploy_kvm
+  assert_shutdown_and_restore_system
+  power_action
 );
 
 # Function wrapping 'pkg' command with allowed return codes, timeout and logging facility.
@@ -55,8 +60,8 @@ sub pkg_call {
     my $log              = $args{log};
     my $sudo             = $args{sudo}     || 0;
 
-    my $str = hashed_string("ZN$command");
-    my $redirect = is_serial_terminal() ? '' : " > /dev/$serialdev";
+    my $str      = hashed_string("ZN$command");
+    my $redirect = " > /dev/$serialdev";
 
     if ($log) {
         if ($sudo) {
@@ -91,34 +96,23 @@ sub clear_console {
     type_string "clear\n";
 }
 
-sub reboot {
-    my ($command) = @_;
-    my $action = ($command eq 'poweroff') ? 'poweroff' : 'reboot';
-    wait_idle;
-    if (check_var('DESKTOP', 'mate')) {
-        # we need to run the command out of terminal, otherwise it's not focused...
-        x11_start_program('mate-session-save --shutdown-dialog', undef, {terminal => 1, no_wait => 1});
-        assert_screen 'logoutdialog';
-        if ($action eq 'poweroff') {
-            send_key 'alt-s';    # shutdown
-        }
-        else {
-            send_key 'alt-r';    # restart
-        }
-    }
-    elsif (check_var('DESKTOP', 'textmode')) {
-        script_run "$action", 0;
-    }
-    reset_consoles;
+sub clear_and_verify_console {
+    type_string "clear\n";
+    assert_screen('cleared-console');
 }
 
-sub poweroff {
-    reboot('poweroff');
+sub pre_bootmenu_setup {
+    if (get_var('USBBOOT')) {
+        assert_screen 'sea-bios-splash', 5;
+        send_key 'esc';
+        assert_screen 'boot-menu-usb', 4;
+        send_key(2 + get_var('NUMDISKS'));
+    }
 }
 
 sub bootloader_dvd {
     if (check_var('DESKTOP', 'mate')) {
-        assert_screen 'bootloader-menu-main-screen-media-boot';
+        assert_screen 'bootloader-menu-main-screen-media-boot', 90;
         # Snapshots before 20161030 had GRUB bootloader,
         # which we don't want to test.
         unless (get_var('BUILD') >= 20161030) {
@@ -127,7 +121,7 @@ sub bootloader_dvd {
         }
     }
     elsif (check_var('DESKTOP', 'textmode')) {
-        assert_screen 'bootloader-menu-main-screen-media-boot-textmode';
+        assert_screen 'bootloader-menu-main-screen-media-boot-textmode', 90;
     }
     send_key '5';
     assert_screen 'bootloader-menu-configuration';
@@ -148,7 +142,7 @@ sub bootloader_hdd {
 }
 
 sub firstboot_setup {
-    assert_screen 'boot-uname';
+    assert_screen 'boot-uname',         90;
     assert_screen 'firstboot-keyboard', 180;
     send_key 'ret';
     assert_screen 'firstboot-language';
@@ -173,14 +167,15 @@ sub lightdm_login {
     # Sometimes the password did not make it for the first time
     for (1 .. 5) {
         if (check_screen('lightdm-incorrect-password', 5)) {
-            record_soft_failure 'Typing password did not made it for the first time...';
+            record_soft_failure 'Typing password did not made it';
             type_password;
             send_key 'ret';
         }
         else {
-            last;
+            return;
         }
     }
+    die "Can't login via LightDM to MATE";
 }
 
 sub console_login {
@@ -191,20 +186,39 @@ sub console_login {
     send_key 'ret';
 }
 
-sub wait_boot {
-    my ($args) = @_;
-    # Snapshot 20160421 does fast reboot w/o BIOS in place.
-    if (check_screen('sea-bios-splash', 120)) {
-        assert_screen 'bootloader-menu-main-screen-installed-system';
+sub match_mate_desktop {
+    unless (check_screen('mate-desktop', 200)) {
+        if (check_screen 'mate-desktop-missing-icons') {
+            record_soft_failure "illumos#8118, mate-desktop/caja#792: caja won't show desktop icons: "
+              . "g_hash_table_foreach: assertion 'version == hash_table->version' failed";
+            x11_start_program 'caja --quit';
+        }
+        else {
+            die "Can't match MATE desktop";
+        }
+    }
+    if (check_screen('panel-object-quit-unexpectedly', 5)) {
         send_key 'ret';
-        assert_screen 'boot-uname' if get_var('BUILD') >= 20161030;
+        wait_still_screen;
+    }
+}
+
+sub wait_boot {
+    my ($self) = @_;
+    # Snapshot 20160421 does fast reboot w/o BIOS in place.
+    if (check_screen([qw(sea-bios-splash vbox-select-boot-device)], 200)) {
+        assert_screen('bootloader-menu-main-screen-installed-system', 90);
+        send_key 'ret';
+        if (get_var('BUILD') >= 20161030) {
+            assert_screen 'boot-uname', check_var('VIRSH_VMM_FAMILY', 'xen') ? 90 : 30;
+        }
     }
     if (check_var('DESKTOP', 'mate')) {
         lightdm_login;
-        assert_screen 'mate-desktop';
+        match_mate_desktop;
     }
     elsif (check_var('DESKTOP', 'textmode')) {
-        console_login;
+        assert_screen 'console-login', 300;
     }
     wait_idle;
 }
@@ -227,11 +241,10 @@ sub disable_fastreboot {
 }
 
 sub enable_vt {
-    # Enable virtual consoles 2 and 4
+    # Enable virtual console 4
     assert_script_run 'svcs vtdaemon';
     assert_script_run 'svcs console-login';
     assert_script_sudo '/usr/sbin/svcadm enable vtdaemon';
-    assert_script_sudo '/usr/sbin/svcadm enable console-login:vt2';
     assert_script_sudo '/usr/sbin/svcadm enable console-login:vt4';
     # Disable automatic VT screen locking
     assert_script_sudo '/usr/sbin/svccfg -s vtdaemon setprop options/secure=false';
@@ -251,17 +264,34 @@ sub save_and_upload_log {
     save_screenshot if $args->{screenshot};
 }
 
-sub system_log_gathering {
-    my $self = shift;
-    save_and_upload_log('dmesg',    'dmesg.txt');
-    save_and_upload_log('svcs -xv', 'failed_services.txt');
-    assert_script_run('tar cfJ svc_logs.txz /var/svc/log/');
-    upload_logs('svc_logs.txz');
-    if (check_var('DESKTOP', 'mate')) {
-        upload_logs("/home/$testapi::username/.xsession-errors", failok => 1);
-        upload_logs('/var/log/Xorg.0.log');
-        upload_logs('/var/adm/messages');
+sub core_files_gathering {
+    my %args = @_;
+    $args{nosudo} ||= 0;
+    my $sudo = $args{nosudo} ? '' : 'sudo';
+    # Make sure `find`'s non-zero exit code won't kill the process
+    my $cores = script_output "$sudo find /home/ /root/ /var/ /tmp/ -type f -name 'core.[0-9]*' | tr -s '\n' ' '";
+    my @cores = split / /, $cores;
+    foreach my $core (@cores) {
+        save_and_upload_log("$sudo pmap $core",   "$core.pmap");
+        save_and_upload_log("$sudo pstack $core", "$core.pstack");
+        script_run("$sudo xz -v $core");
+        upload_logs("$sudo core.xz", failok => 1);
+        my $title  = script_output "$sudo awk '/core/ {print \$NF}' $core.pstack" . '.core';
+        my $output = script_output "$sudo cat $core.pstack";
+        record_info($title, $output, result => 'softfail');
     }
+}
+
+sub system_log_gathering {
+    return if check_var('VIRSH_VMM_FAMILY', 'xen');    # no network
+    my %args = @_;
+    $args{nosudo} ||= 0;
+    my $sudo = $args{nosudo} ? '' : 'sudo';
+    core_files_gathering(nosudo => $args{nosudo});
+    script_run('curl -O ' . data_url('utils/system_log_gathering.sh'));
+    script_run("bash system_log_gathering.sh $sudo");
+    upload_logs('system_log_gathering.txz', failok => 1);
+    script_run('rm -rf system_log_gathering.*');
 }
 
 sub deploy_kvm {
@@ -281,6 +311,60 @@ sub deploy_kvm {
     # Create virtual NIC 'vnic0' bound to $phys_link link
     script_sudo('dladm delete-vnic vnic0');
     assert_script_sudo("dladm create-vnic -l $phys_link vnic0");
+}
+
+# VNC connection to SUT (the 'sut' console) is terminated on Xen via svirt
+# backend and we have to re-connect *after* the restart, otherwise we end up
+# with stalled VNC connection. The tricky part is to know *when* the system
+# is already booting.
+sub assert_shutdown_and_restore_system {
+    my ($action) = @_;
+    $action //= 'reboot';
+    my $vnc_console = 'sut';
+    console($vnc_console)->disable_vnc_stalls;
+    assert_shutdown(90);
+    if ($action eq 'reboot') {
+        reset_consoles;
+        console('svirt')->define_and_start;
+        select_console($vnc_console);
+    }
+}
+
+=head2 power_action
+
+    power_action($action);
+
+Executes power action (e.g. poweroff, reboot) from root console.
+=cut
+sub power_action {
+    my $action = shift;
+    my %args   = @_;
+    die "'action' was not provided" unless $action;
+    console('sut')->disable_vnc_stalls if check_var('BACKEND', 'svirt');
+    if (check_var('DESKTOP', 'mate')) {
+        select_console 'x11';
+        x11_start_program('mate-session-save --shutdown-dialog', undef, {terminal => 0, no_wait => 1});
+        assert_screen 'logoutdialog', 90;
+        $action eq 'poweroff' ? send_key 'alt-s' : send_key 'alt-r';
+        if (check_screen('mate-program-still-running', 5)) {
+            record_soft_failure 'Some program is still running';
+            assert_and_click('shut-down-anyway', 'left', 10, 2);
+        }
+    }
+    elsif (check_var('DESKTOP', 'textmode')) {
+        my $sudo = $args{nosudo} ? '' : 'sudo';
+        type_string "$sudo $action\n";
+    }
+    if (check_var('VIRSH_VMM_FAMILY', 'xen')) {
+        assert_shutdown_and_restore_system($action);
+    }
+    elsif (check_var('BACKEND', 'qemu')) {    # Linux KVM/QEMU
+        assert_screen('press-any-key-to-reboot', 180) if $action eq 'poweroff';
+    }
+    else {                                    # VirtualBox
+        assert_shutdown(90) if $action eq 'poweroff';
+    }
+    reset_consoles;
 }
 
 1;

@@ -11,7 +11,7 @@
 # Summary: Xen bootloader
 # Maintainer: Michal Nowak <mnowak@startmail.com>
 
-use base 'installbasetest';
+use base 'basetest';
 use strict;
 use warnings;
 use testapi;
@@ -20,7 +20,8 @@ use utils;
 use File::Basename;
 
 sub run() {
-    my $vmm_type = get_required_var('VIRSH_VMM_TYPE');
+    my $vmm_type   = get_required_var('VIRSH_VMM_TYPE');
+    my $vmm_family = get_required_var('VIRSH_VMM_FAMILY');
 
     my $svirt = select_console('svirt');
     my $name  = $svirt->name;
@@ -28,26 +29,27 @@ sub run() {
     my $xenconsole = 'hvc0';
 
     if ($vmm_type eq 'linux') {
-        $svirt->change_domain_element(os => initrd => "/var/lib/libvirt/images/$name.initrd");
+        $svirt->change_domain_element(os => initrd => "/var/lib/openqa/share/factory/tmp/$name.initrd");
         # <os><kernel>...</kernel></os> defaults to grub.xen, we need to remove
         # content first if booting kernel diretly
         $svirt->change_domain_element(os => kernel => undef);
-        $svirt->change_domain_element(os => kernel => "/var/lib/libvirt/images/$name.kernel");
-    }
-    if ($vmm_type eq 'hvm') {
-        $svirt->change_domain_element(features => apic => undef);
+        $svirt->change_domain_element(os => kernel => "/var/lib/openqa/share/factory/tmp/$name.kernel");
     }
 
-    $svirt->change_domain_element(devices => video => model => {type => get_var('VGA', 'cirrus')});
+    set_var('QEMUVGA', 'cirrus') unless get_var('QEMUVGA');
+    $svirt->change_domain_element(devices => video => model => {type => get_var('QEMUVGA')});
 
     my $size_i = get_var('HDDSIZEGB', '24');
-    $svirt->add_disk(
-        {
-            size      => $size_i . 'G',
-            create    => 1,
-            dev_id    => 'a',
-            bootorder => 1
-        });
+    my $numdisks = get_var('NUMDISKS');
+    for my $n (1 .. $numdisks) {
+        $svirt->add_disk(
+            {
+                size      => $size_i . 'G',
+                create    => 1,
+                dev_id    => chr(ord('a') + $n - 1),
+                bootorder => $n
+            });
+    }
 
     # In JeOS and netinstall we don't have ISO media, for the rest we have to attach it.
     my $isofile = get_required_var('ISO');
@@ -55,8 +57,8 @@ sub run() {
         {
             cdrom     => 1,
             file      => $isofile,
-            dev_id    => 'b',
-            bootorder => 2
+            dev_id    => chr(ord('a') + $numdisks),
+            bootorder => $numdisks + 1
         });
 
     # We need to use 'tablet' as a pointer device, i.e. a device
@@ -108,26 +110,16 @@ sub run() {
         $ifacecfg{model} = {type => $iface_model};
     }
 
-    # We can use bridge or network as a base for network interface. Network named 'default'
-    # happens to be omnipresent on workstations, bridges (br0, ...) on servers. If both 'default'
-    # network and bridge are defined and active, bridge should be prefered as 'default' network
-    # does not work.
-    if (my $bridges = $svirt->get_cmd_output("virsh iface-list --all | grep -w active | awk '{ print \$1 }' | tail -n1 | tr -d '\\n'")) {
-        $ifacecfg{type} = 'bridge';
-        $ifacecfg{source} = {bridge => $bridges};
-    }
-    elsif (my $networks = $svirt->get_cmd_output("virsh net-list --all | grep -w active | awk '{ print \$1 }' | tail -n1 | tr -d '\\n'")) {
-        $ifacecfg{type} = 'network';
-        $ifacecfg{source} = {network => $networks};
-    }
+    my $virsh_vmm_iface_type = get_var('VIRSH_VMM_IFACE_TYPE', 'network');
+    $ifacecfg{type} = $virsh_vmm_iface_type;
+    $ifacecfg{source} = {$virsh_vmm_iface_type => get_var('VIRSH_VMM_IFACE_TYPE', 'default')};
 
-    # Dosable network interface as it panics illumos kernel
+    # #7186: Disable network interface as it panics illumos kernel
     #$svirt->add_interface(\%ifacecfg);
 
     $svirt->define_and_start;
 
-    # connects to a guest VNC session on Xen HVM,
-    # illumos PV won't set framebuffer.
+    # Connects to a guest VNC session on Xen HVM, illumos PV won't set console framebuffer.
     select_console('sut') if ($vmm_type eq 'hvm');
 }
 

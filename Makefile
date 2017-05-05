@@ -9,7 +9,6 @@ help:
 
 .PHONY: prepare
 prepare:
-	git clone git://github.com/os-autoinst/os-autoinst
 	$(MAKE) check-links
 	cd os-autoinst && cpanm -nq --installdeps .
 	cpanm -nq --installdeps .

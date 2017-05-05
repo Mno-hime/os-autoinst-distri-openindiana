@@ -22,11 +22,9 @@ use testapi qw(send_key %cmd assert_screen check_screen check_var get_var
   wait_still_screen wait_screen_change assert_script_sudo);
 
 sub handle_password_prompt {
-    #assert_screen([qw(password-prompt no-password-prompt)]);
-    if (check_screen('password-prompt', 2)) {
-        type_password;
-        send_key('ret');
-    }
+    assert_screen('password-prompt');
+    type_password;
+    send_key('ret');
 }
 
 sub init() {
@@ -43,14 +41,13 @@ sub script_sudo($$) {
     if ($wait > 0) {
         $prog = "$prog; echo $str-\$?- > /dev/$testapi::serialdev";
     }
-    type_string "clear\n";    # poo#13710
     type_string "sudo $prog\n";
-    handle_password_prompt;
     if ($wait > 0) {
         return wait_serial("$str-\\d+-");
     }
     return;
 }
+
 
 sub set_standard_prompt {
     my ($self, $user) = @_;
@@ -67,15 +64,15 @@ sub set_standard_prompt {
 sub x11_start_program($$$) {
     my ($self, $program, $timeout, $options) = @_;
     # enable valid option as default
-    $options->{valid} //= 1;
     send_key "alt-f2";
     if (!check_screen("desktop-runner", $timeout)) {
         # if "desktop-runner" not found, send alt-f2 three times with 10 second timeout
         record_soft_failure 'alt-f2 did not made it for the first time...';
         send_key_until_needlematch 'desktop-runner', 'alt-f2', 3, 10;
     }
+    wait_idle;
     type_string $program;
-    wait_idle 5;
+    wait_idle;
     if ($options->{terminal}) {
         send_key('alt-t');
         sleep 3;
@@ -88,15 +85,13 @@ sub x11_start_program($$$) {
 sub init_consoles {
     my ($self) = @_;
 
-    if (get_var('VIRTUALIZATION')) {
-        $self->add_console(
-            'vnc',
-            'vnc-base',
-            {
-                hostname => 'localhost',
-                port     => get_var('VNC_INSTANCE', 0) + 11022
-            });
-    }
+    $self->add_console(
+        'vnc',
+        'vnc-base',
+        {
+            hostname => 'localhost',
+            port     => get_var('VNC_INSTANCE', 0) + 11022
+        });
     if (check_var('BACKEND', 'svirt')) {
         my $hostname = get_var('VIRSH_GUEST');
         my $port = get_var('VIRSH_INSTANCE', 1) + 5900;
@@ -110,47 +105,37 @@ sub init_consoles {
                 password => $testapi::password
             });
     }
-    $self->add_console('root-console', 'tty-console', {tty => 2});
     $self->add_console('user-console', 'tty-console', {tty => 4});
     $self->add_console('x11',          'tty-console', {tty => 7});
 
     return;
 }
 
-sub become_root {
-    my ($self) = @_;
-
-    $self->script_sudo('bash', 0);
-    type_string "echo \$LOGNAME > /dev/$testapi::serialdev\n";
-    wait_serial("root", 10) || die "Root prompt not there";
-    type_string "cd\n";
-    $self->set_standard_prompt('root');
-    type_string "clear\n";
-}
-
 # callback whenever a console is selected for the first time
 sub activate_console {
     my ($self, $console) = @_;
 
+    my $myconsole = $console;
     $console =~ m/^(\w+)-(console)/;
     my ($name, $user, $type) = ($1, $1, $2);
     $name = $user //= '';
     $type //= '';
-    if ($name eq 'user') {
+    if ($name) {
         $user = $testapi::username;
     }
 
     if ($type eq 'console') {
         my $nr = 4;
-        $nr = 2 if ($name eq 'root');
         assert_screen("console$nr-selected");
         type_string "$testapi::username\n";
         handle_password_prompt;
         assert_screen "text-logged-in-user";
         $self->set_standard_prompt($testapi::username);
-        if ($name eq 'root') {
-            $self->become_root();
-        }
+    }
+    elsif ($myconsole eq 'svirt') {
+        wait_still_screen;
+        $self->set_standard_prompt('root');
+        assert_screen('svirt');
     }
 }
 

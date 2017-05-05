@@ -16,7 +16,7 @@ use testapi;
 use utils 'pkg_call';
 
 sub run() {
-    select_console 'root-console';
+    select_console 'user-console';
 
     pkg_call('list bash');
     pkg_call('info dash', exitcode => [1]);

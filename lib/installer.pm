@@ -18,7 +18,18 @@ use testapi;
 
 our @EXPORT = qw(
   text_installer
+  quit_installer
 );
+
+sub quit_installer {
+    if (check_var('DESKTOP', 'textmode')) {
+        send_key 'f9';
+        assert_screen 'quit-installer';
+        send_key 'tab';
+        send_key 'ret';
+        assert_screen 'installation-menu';
+    }
+}
 
 sub text_installer {
     assert_screen 'welcome-splash-screen';
@@ -59,18 +70,21 @@ sub text_installer {
         die 'Yet to be implemented :)';
     }
     send_key 'f2';
-    # illumos hangs when network interface is present under Xen; see bug #7186
+    # Workaround for 8259: '"Network" screen in text installer is skipped if network
+    # interface is missing and EFI used'. Go back and networking tab is present.
+    send_key 'f3' if (check_var('VIRSH_VMM_FAMILY', 'xen') and $partitioning eq 'efi');
+    assert_screen 'network-setup';
+    for (1 .. 15) { send_key 'backspace'; }
+    type_string 'gaiwan';
+    # 7186: illumos hangs when network interface is present under Xen
     if (check_var('VIRSH_VMM_FAMILY', 'xen')) {
-        record_soft_failure '#7186: Network interface is not present';
+        assert_screen 'network-nonet-config';
     }
     else {
-        assert_screen 'network-setup';
-        for (1 .. 15) { send_key 'backspace'; }
-        type_string 'gaiwan';
         send_key 'tab';
         assert_screen 'network-auto-config';
-        send_key 'f2';
     }
+    send_key 'f2';
     assert_screen 'time-zones-regions';
     send_key_until_needlematch('time-zones-regions-europe', 'down');
     send_key 'f2';

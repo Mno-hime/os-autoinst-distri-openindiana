@@ -14,7 +14,7 @@
 use base 'consoletest';
 use strict;
 use testapi;
-use utils qw(pkg_call reboot);
+use utils qw(pkg_call);
 
 sub run() {
     select_console 'user-console';

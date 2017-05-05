@@ -14,20 +14,27 @@ package consoletest;
 use base 'openindianabasetest';
 use strict;
 use testapi;
+use utils 'system_log_gathering';
 
 sub post_run_hook {
     my ($self) = @_;
 
-    # start next test in home directory
-    type_string "cd\n";
-
-    # clear screen to make screen content ready for next test
-    $self->clear_and_verify_console;
+    if (!check_var('DESKTOP', 'mate')) {
+        # start next test in home directory
+        type_string "cd\n";
+        # clear screen to make screen content ready for next test
+        $self->clear_and_verify_console;
+    }
 }
 
 # All steps in the installation are 'important'.
-sub test_flags() {
+sub test_flags {
     return {important => 1};
+}
+
+sub post_fail_hook {
+    $testapi::serialdev = get_var('SERIALDEV', 'ttya');
+    system_log_gathering;
 }
 
 1;

@@ -16,9 +16,9 @@ use testapi;
 use utils 'pkg_call';
 
 sub run() {
-    select_console 'root-console';
+    select_console 'user-console';
 
-    pkg_call('rebuild-index');
+    pkg_call('rebuild-index', sudo => 1);
     pkg_call('publisher');
     pkg_call('search zsh');
     pkg_call('search -p zsh');

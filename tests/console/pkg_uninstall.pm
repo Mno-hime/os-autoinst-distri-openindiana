@@ -16,10 +16,10 @@ use testapi;
 use utils 'pkg_call';
 
 sub run() {
-    select_console 'root-console';
+    select_console 'user-console';
 
-    pkg_call('uninstall dash');
-    pkg_call('list dash', exitcode => [1]);
+    pkg_call('uninstall dash', sudo     => 1);
+    pkg_call('list dash',      exitcode => [1]);
 }
 
 1;

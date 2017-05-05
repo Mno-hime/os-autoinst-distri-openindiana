@@ -16,12 +16,12 @@ use testapi;
 use utils 'pkg_call';
 
 sub run() {
-    select_console 'root-console';
+    select_console 'user-console';
 
     assert_script_run('pkgrecv -s https://pkg.openindiana.org/hipster -d zsh.p5p -a -r pkg://openindiana.org/shell/zsh', 1000);
     assert_script_run('pkgrepo -s zsh.p5p list');
     pkg_call('list -f -g zsh.p5p');
-    pkg_call('set-publisher -p zsh.p5p');
+    pkg_call('set-publisher -p zsh.p5p', sudo => 1);
     pkg_call('publisher | grep zsh');
 
     # TODO: install zsh from the new publisher
@@ -29,7 +29,7 @@ sub run() {
     #pkg_call('install zsh');
 
     # Clean up
-    pkg_call('set-publisher -G file:///root/zsh.p5p openindiana.org');
+    pkg_call('set-publisher -G file://${HOME}/zsh.p5p openindiana.org', sudo => 1);
     pkg_call('publisher | grep -v zsh');
     assert_script_run('rm zsh.p5p');
 }

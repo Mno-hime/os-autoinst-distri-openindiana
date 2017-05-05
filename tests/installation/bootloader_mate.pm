@@ -13,15 +13,16 @@
 use base 'installbasetest';
 use strict;
 use testapi;
-use utils qw(bootloader_dvd firstboot_setup mate_change_resolution_1024_768);
+use utils;
 use installer 'text_installer';
 
 sub run() {
+    pre_bootmenu_setup;
     bootloader_dvd;
     firstboot_setup;
     # For releases before and including 20161030 OI can't use cirrus driver and therefor
     # boots to 1280x768 px resolution, but we need to get to 1024x768 somehow.
-    if (!check_var('QEMUVGA', 'cirrus')) {
+    if (!check_var('QEMUVGA', 'cirrus') and !check_var('VIRSH_VMM_FAMILY', 'virtualbox')) {
         assert_screen 'mate-desktop-1280x768', 200;
         wait_still_screen;
         # Close About GNOME window
@@ -31,21 +32,29 @@ sub run() {
         mate_change_resolution_1024_768;
     }
     else {
-        assert_screen 'mate-desktop', 200;
+        match_mate_desktop;
         wait_still_screen;
     }
-
+    mouse_hide;
 
     my $installer = get_var('INSTALLER', 'gui');
     # GUI installer
     if ($installer eq 'gui') {
         x11_start_program '/usr/bin/sudo /usr/bin/gui-install';
         assert_screen 'mate-openindiana-gui-installer';
-        send_key 'ret';
-        # Open release notes in Firefox
-        assert_screen 'firefox-openindiana-release-notes';
-        send_key 'ctrl-w';
-        assert_screen 'mate-openindiana-gui-installer';
+        unless (check_var('VIRSH_VMM_FAMILY', 'xen')) {
+            send_key 'ret';
+            # Open release notes in Firefox
+            my $tag = check_screen([qw(firefox-reader-view firefox-openindiana-release-notes)], 90);
+            if (match_has_tag('firefox-reader-view')) {
+                for (1 .. 10) {
+                    last if (wait_screen_change { assert_and_click('firefox-reader-view-close-button', 'left', 10, 2); });
+                }
+            }
+            assert_screen('firefox-openindiana-release-notes');
+            send_key 'ctrl-w';
+            assert_screen 'mate-openindiana-gui-installer';
+        }
         # Show installation help
         send_key 'alt-h';
         assert_screen 'installer-help';
@@ -108,7 +117,8 @@ sub run() {
             send_key 'alt-o';
         }
 
-        assert_screen 'installation-finished', 1000;
+        # Installation from USB (EHCI-only currently) is really slow
+        assert_screen 'installation-finished', (get_var('USBBOOT') || check_var('VBOXHDDTYPE2', 'usb')) ? 3000 : 1200;
         # List thru installation log
         send_key_until_needlematch('select-installation-log', 'tab');
         send_key 'ret';
@@ -116,14 +126,19 @@ sub run() {
         wait_screen_change { send_key 'pgdn' };
         send_key 'alt-c';
         assert_screen 'installation-finished';
-        # Restart to installed system
-        send_key 'alt-r';
+        send_key 'alt-q';    # Quit
+        assert_screen 'quit-installation';
+        send_key 'alt-o';    # OK
     }
     elsif ($installer eq 'text') {
         x11_start_program('/usr/bin/sudo /usr/bin/text-install', undef, {terminal => 1});
         text_installer;
-        send_key 'f8';
+        send_key 'f9';       # Quit text installer
     }
+    x11_start_program('xterm');
+    system_log_gathering;
+    type_string "exit\n";
+    power_action('reboot');
 }
 
 1;

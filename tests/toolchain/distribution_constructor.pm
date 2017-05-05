@@ -37,13 +37,20 @@ sub run() {
         upload_logs "simple-log-$variant.txt";
         upload_logs "detail-log-$variant.txt";
 
-        # Upload constructed ISO media as a public asset
+        # Upload constructed ISO and USB media as public assets
         script_run "ls -lh ${dc_root}/media/";
-        my $upload_filename = "OI-hipster-$variant-$snapdate.iso";
-        assert_script_sudo "mv ${dc_root}/media/OpenIndiana_${variant}_X86.iso ${dc_root}/media/$upload_filename";
-        upload_asset("${dc_root}/media/$upload_filename", 1, 0);
-        record_info($variant, "$upload_filename uploaded successfully");
+        for my $medium ('iso', 'usb') {
+            my $upload_filename = "OI-hipster-$variant-$snapdate.$medium";
+            assert_script_sudo "mv ${dc_root}/media/OpenIndiana_${variant}_X86.$medium ${dc_root}/media/$upload_filename";
+            for (1 .. 5) {    # Try to upload image up to five times
+                last unless (upload_asset("${dc_root}/media/$upload_filename", 1, 0, 300));
+            }
+            record_info("$variant$medium", "$upload_filename uploaded successfully");
+            # Save some space on openQA worker as OS image takes 40-45 GB
+            assert_script_sudo "rm -f ${dc_root}/media/$upload_filename";
+        }
     }
+    type_string "df -h > /dev/$testapi::serialdev\n";
 }
 
 1;

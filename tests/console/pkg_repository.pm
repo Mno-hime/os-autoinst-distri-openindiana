@@ -16,19 +16,19 @@ use testapi;
 use utils 'pkg_call';
 
 sub run() {
-    select_console 'root-console';
+    select_console 'user-console';
 
     pkg_call('publisher');
-    pkg_call('set-publisher -O http://pkg.openindiana.org/hipster-encumbered hipster-encumbered');
+    pkg_call('set-publisher -O http://pkg.openindiana.org/hipster-encumbered hipster-encumbered', sudo => 1);
     pkg_call('publisher');
-    pkg_call('list xvid', exitcode => [1]);
-    pkg_call('install xvid');
+    pkg_call('list xvid',    exitcode => [1]);
+    pkg_call('install xvid', sudo     => 1);
     pkg_call('list xvid');
-    pkg_call('unset-publisher hipster-encumbered');
+    pkg_call('unset-publisher hipster-encumbered', sudo => 1);
     pkg_call('publisher');
     pkg_call('list xvid');
-    pkg_call('uninstall xvid');
-    pkg_call('list xvid', exitcode => [1]);
+    pkg_call('uninstall xvid', sudo     => 1);
+    pkg_call('list xvid',      exitcode => [1]);
     assert_script_run('pkgrepo info -s https://pkg.openindiana.org/hipster/');
     assert_script_run('pkgrepo list -s https://pkg.openindiana.org/hipster/ xorg-video-cirrus');
     pkg_call('history');

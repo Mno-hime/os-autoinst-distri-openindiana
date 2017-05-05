@@ -10,22 +10,16 @@
 # Summary: Update system to latest packages
 # Maintainer: Michal Nowak <mnowak@startmail.com>
 
-use base 'installbasetest';
+use base 'basetest';
 use strict;
 use testapi;
-use utils qw(poweroff system_log_gathering);
+use utils qw(power_action system_log_gathering);
 
 sub run() {
-    select_console 'root-console';
+    select_console 'user-console';
     system_log_gathering;
-    if (check_var('DESKTOP', 'mate')) {
-        select_console 'x11';
-    }
-    elsif (check_var('DESKTOP', 'textmode')) {
-        select_console 'root-console';
-    }
-    poweroff;
-    assert_shutdown(90);
+    select_console 'x11' if check_var('DESKTOP', 'mate');
+    power_action('poweroff');
 }
 
 1;

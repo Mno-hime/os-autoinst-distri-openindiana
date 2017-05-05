@@ -59,7 +59,7 @@ sub run() {
     #    send_key 'ret';
     #    assert_screen('marbsd-prompt');
 
-    select_console 'root-console';
+    select_console 'user-console';
     my $kvmstat_output = script_output('kvmstat 1 5 | grep -v "pid vcpu"');
     die "'kvmstat' did not produce statistics" unless $kvmstat_output;
 
@@ -85,7 +85,7 @@ sub run() {
 
     assert_script_sudo('modunload -i $(modinfo | grep kvm | awk "{ print $1 }")');
     assert_script_sudo('modinfo | grep kvm && false || true');
-    reset_console('vnc');    # To make sure we activate VNC of new VM on reconnect
+    console('vnc')->reset;    # To make sure we activate VNC of new VM on reconnect
 }
 
 1;

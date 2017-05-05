@@ -13,10 +13,10 @@
 use base 'consoletest';
 use strict;
 use testapi;
-use utils qw(pkg_call wait_boot);
+use utils qw(pkg_call wait_boot power_action);
 
 sub run() {
-    select_console 'root-console';
+    select_console 'user-console';
 
     my $get_nr_be = 'beadm list | grep -w NR | awk \'{ print $1 }\'';
     my $get_r_be  = 'beadm list | grep -w R | awk \'{ print $1 }\'';
@@ -24,34 +24,32 @@ sub run() {
 
     # Install updates to new BE, reboot to it and verify we are there
     my $original_active_be = script_output($get_nr_be);
-    my $ret                = pkg_call('update --require-new-be');
+    my $ret = pkg_call('update --require-new-be', sudo => 1);
     if ($ret eq 4) {
         record_info('pkg_call returned "4"', 'Nothing to do; quit', result => 'softfail');
         return 1;
     }
     my $active_be_after_reboot = script_output('beadm list | grep -w R | awk \'{ print $1 }\'');
-    type_string "reboot\n";
-    reset_consoles;
+    power_action('reboot');
     wait_boot;
-    select_console 'root-console';
+    select_console 'user-console';
     my $new_active_be     = script_output($get_nr_be);
     my $new_active_be_bkp = $new_active_be;
     die "We booted to '$new_active_be' BE, but should boot to '$active_be_after_reboot' BE" unless ($active_be_after_reboot eq $new_active_be);
 
     # Activate old BE, boot to it and verify we are in it
-    assert_script_run("beadm activate $original_active_be");
+    assert_script_sudo("beadm activate $original_active_be");
     $active_be_after_reboot = script_output('beadm list | grep -w R | awk \'{ print $1 }\'');
-    type_string "reboot\n";
-    reset_consoles;
+    power_action('reboot');
     wait_boot;
-    select_console 'root-console';
+    select_console 'user-console';
     $new_active_be = script_output($get_nr_be);
     die "We booted to '$new_active_be' BE, but should boot to '$active_be_after_reboot' BE" unless ($active_be_after_reboot eq $new_active_be);
 
     # Destroy BE with updates
-    assert_script_run("beadm destroy -F -s -v $new_active_be_bkp");
-    assert_script_run("! beadm destroy -F -s -v $original_active_be");
-    assert_script_run("beadm list");
+    assert_script_sudo("beadm destroy -F -s -v $new_active_be_bkp");
+    assert_script_run("! sudo beadm destroy -F -s -v $original_active_be");
+    assert_script_sudo("beadm list");
 }
 
 sub test_flags() {

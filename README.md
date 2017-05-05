@@ -6,10 +6,38 @@ For more details on openQA see http://open.qa.
 
 ## How to contribute
 
-Fork the repository and make some changes.
-Once you're done with your changes send a pull request. You have to agree to
-the license. Thanks!
-If you have questions, ask `mnowak_` on irc.freenode.net in #oi-dev.
+Setup your local openQA instance. Read the documentation on http://open.qa.
+
+Fork following repositories on GitHub:
+
+https://github.com/Mno-hime/os-autoinst-distri-openindiana
+
+https://github.com/Mno-hime/os-autoinst 
+
+https://github.com/Mno-hime/os-autoinst-needles-openindiana
+
+Clone them locally:
+
+git clone git@github.com:$YOU/os-autoinst-distri-openindiana.git
+
+git clone git@github.com:$YOU/os-autoinst.git os-autoinst-distri-openindiana/os-autoinst/
+
+git clone git@github.com:$YOU/os-autoinst-needles-openindiana.git os-autoinst-distri-openindiana/products/openindiana/needles/
+
+chmod 0777 os-autoinst-distri-openindiana/products/openindiana/needles/
+cd os-autoinst-distri-openindiana/
+
+Prepare environment:
+
+cpanm --local-lib=~/perl5 local::lib && eval $(perl -I ~/perl5/lib/perl5/ -Mlocal::lib)
+
+make prepare
+
+Switch to new branch, do changes, test then in your openQA instance. Before you commit the changes, run `make test` to verify, that the changes are valid and conform to coding style. Create Pull Request.
+
+Providing Pull Request means you agree to the license.
+
+If you have questions, ask `mnowak_` on #oi-dev (Freenode).
 
 ### Coding style
 

@@ -17,10 +17,10 @@ use strict;
 use testapi;
 use utils 'deploy_kvm';
 
-sub run() {
+sub run {
     select_console 'user-console';
 
-    my $image = 'alpine-virt-3.5.2-x86_64.iso';
+    my $image = 'alpine-virt-3.6.0-x86_64.iso';
     deploy_kvm($image);
 
     my $macaddr = '90:b8:d0:c0:ff:ee';
@@ -28,18 +28,18 @@ sub run() {
         "qemu-kvm -enable-kvm -vga std -drive file=$image,media=cdrom,if=ide "
           . "-vnc 0.0.0.0:0 -no-hpet -net nic,vlan=0,name=net0,model=virtio,macaddr=$macaddr "
           . "-net vnic,vlan=0,name=net0,ifname=vnic0,macaddr=$macaddr "
-          . "-boot d -m 128 -serial /dev/$testapi::serialdev 2>&1 | tee qemu_kvm.log",
+          . "-boot d -m 128 -serial /dev/$testapi::serialdev 2>&1 | tee qemu_kvm.log | tee /dev/$testapi::serialdev &",
         0
     );
+    wait_serial('Start bios') || die 'Alpine did not boot';
     select_console 'vnc';
+    console('vnc')->disable_vnc_stalls;
 
-    for (1 .. 5) { send_key 'esc'; sleep 1; }    # Make sure we stop the isolinux bootloader
-    assert_screen('boot-alpine');
-    send_key 'tab';
-    type_string "virtgrsec noapic\n";
+    send_key_until_needlematch('alpine-isolinux-boot-options', 'tab', 10, 0.5);
+    type_string "virthardened noapic\n";
     assert_screen('welcome-to-alpine');
 
-    select_console 'root-console';
+    select_console 'user-console';
     my $kvmstat_output = script_output('kvmstat 1 5 | grep -v "pid vcpu"');
     die "'kvmstat' did not produce statistics" unless $kvmstat_output;
 
@@ -64,7 +64,7 @@ sub run() {
 
     assert_script_sudo('modunload -i $(modinfo | grep kvm | awk "{ print $1 }")');
     assert_script_sudo('modinfo | grep kvm && false || true');
-    reset_console('vnc');    # To make sure we activate VNC of new VM on reconnect
+    console('vnc')->reset;    # To make sure we activate VNC of new VM on reconnect
 }
 
 1;
