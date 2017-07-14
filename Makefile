@@ -42,32 +42,12 @@ test-compile: check-links
 test-compile-changed: os-autoinst/
 	export PERL5LIB=${PERL5LIB_} ; for f in `git diff --name-only | grep '.pm'` ; do perl -c $$f 2>&1 | grep -v " OK$$" && exit 2; done ; true
 
-.PHONY: test-metadata
-test-metadata:
-	tools/check_metadata $$(git ls-files "tests/**.pm")
-
-.PHONY: test-metadata-changed
-test-metadata-changed:
-	tools/check_metadata $$(git diff --name-only | grep 'tests.*pm')
-
-.PHONY: test-merge
-test-merge:
-	@REV=$$(git merge-base FETCH_HEAD master 2>/dev/null) ;\
-	if test -n "$$REV"; then \
-	  FILES=$$(git diff --name-only FETCH_HEAD `git merge-base FETCH_HEAD master 2>/dev/null` | grep 'tests.*pm') ;\
-	  for file in $$FILES; do if test -f $$file; then \
-	    tools/check_metadata $$file || touch failed; \
-	    ${PERLCRITIC} $$file || touch failed ;\
-	  fi ; done; \
-	fi
-	@test ! -f failed
-
 .PHONY: test-dry
 test-dry:
 	export PERL5LIB=${PERL5LIB_} ; tools/detect_code_dups
 
 .PHONY: test
-test: tidy test-compile test-merge test-dry
+test: tidy test-compile test-dry
 
 PERLCRITIC=PERL5LIB=tools/lib/perlcritic:$$PERL5LIB perlcritic --quiet --gentle --include Perl::Critic::Policy::HashKeyQuote --include Perl::Critic::Policy::ConsistentQuoteLikeWords
 
