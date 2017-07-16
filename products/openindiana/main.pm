@@ -47,6 +47,9 @@ sub load_featuretests {
             loadtest 'update/pkg_update_to_latest_packages';
         }
         if (exists $features{'toolchain'}) {
+            loadtest 'toolchain/pkgsrc_deploy';
+            loadtest 'toolchain/pkgsrc_pkgin_install_packages';
+            loadtest 'toolchain/pkgsrc_manage_packages';
             loadtest 'toolchain/building_with_oi_userland';
         }
         if (exists $features{'distribution_constructor'}) {
