@@ -24,9 +24,11 @@ our @EXPORT = qw(
 sub quit_installer {
     if (check_var('DESKTOP', 'textmode')) {
         send_key 'f9';
-        assert_screen 'quit-installer';
-        send_key 'tab';
-        send_key 'ret';
+        unless (check_screen('text-installer-installation-failed')) {
+            assert_screen 'quit-installer';
+            send_key 'tab';
+            send_key 'ret';
+        }
         assert_screen 'installation-menu';
     }
 }
