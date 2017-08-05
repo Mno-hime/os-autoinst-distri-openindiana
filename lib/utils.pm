@@ -359,7 +359,7 @@ sub power_action {
         assert_shutdown_and_restore_system($action);
     }
     elsif (check_var('BACKEND', 'qemu')) {    # Linux KVM/QEMU
-        check_screen('press-any-key-to-reboot', 180) if $action eq 'poweroff';
+        check_screen('press-any-key-to-reboot', 60) if $action eq 'poweroff';
     }
     else {                                    # VirtualBox
         assert_shutdown(90) if $action eq 'poweroff';
