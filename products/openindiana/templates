@@ -1047,7 +1047,6 @@
                       name => "create_mate_hdd",
                       settings => [
                         { key => "DESKTOP", value => "mate" },
-                        { key => "FEATURES", value => "consoletests" },
                         { key => "HDDSIZEGB", value => 50 },
                         {
                           key => "PUBLISH_HDD_1",
@@ -1074,7 +1073,6 @@
                       name => "create_textmode_hdd",
                       settings => [
                         { key => "DESKTOP", value => "textmode" },
-                        { key => "FEATURES", value => "consoletests" },
                         { key => "HDDSIZEGB", value => 50 },
                         {
                           key => "PUBLISH_HDD_1",
@@ -1101,7 +1099,6 @@
                       name => "create_textmode_hdd_mirror",
                       settings => [
                         { key => "DESKTOP", value => "textmode" },
-                        { key => "FEATURES", value => "consoletests" },
                         { key => "HDDSIZEGB", value => 100 },
                         { key => "NUMDISKS", value => 2 },
                         {
