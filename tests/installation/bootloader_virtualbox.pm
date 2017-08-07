@@ -20,12 +20,13 @@ sub run() {
     my $name  = $svirt->name;
 
     my $vbm     = 'VBoxManage ';
-    my $homedir = '/var/lib/openqa/share/factory/tmp';
+    my $homedir = get_required_var('CACHEDIRECTORY');
 
     $svirt->run_cmd("$vbm setproperty machinefolder '${homedir}'");
     $svirt->run_cmd("$vbm controlvm $name poweroff");
     $svirt->run_cmd("$vbm unregistervm $name --delete");
-    $svirt->run_cmd("rm -rfv ${homedir}/openQA-SUT-" . get_var('VIRSH_INSTANCE') . "/\n");
+    # Remove leftover VM machine folder, and disk(s)
+    $svirt->run_cmd("rm -rfv ${homedir}/${name}{,_*.vdi}");
 
     $svirt->run_cmd("$vbm setproperty vrdeextpack VNC");
     $svirt->run_cmd("$vbm createvm --name $name --register");
@@ -53,7 +54,7 @@ sub run() {
     $svirt->run_cmd("$vbm storageattach $name --storagectl $storage --port 0 --device 0 --type dvddrive --medium " . get_var('ISO'));
     my $numdisks = get_var('NUMDISKS');
     for my $port (1 .. $numdisks) {
-        my $hddname = "${homedir}/${name}/${name}_${port}";
+        my $hddname = "${homedir}/${name}_${port}";
         $svirt->run_cmd("$vbm createhd --filename $hddname --size " . 1024 * get_var('HDDSIZEGB'));
         $svirt->run_cmd("$vbm storageattach $name --storagectl $storage_2nd --port $port --device 0 --type hdd --medium ${hddname}.vdi");
     }
