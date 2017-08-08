@@ -26,17 +26,13 @@ else
             if [[ "$flavor" =~ "Minimal" ]]; then mediumtype="minimal"; fi
             if [[ "$flavor" =~ "Server" ]]; then mediumtype="text"; fi
             if [[ "$flavor" =~ "Live" ]]; then mediumtype="gui"; fi
-            if [[ "$medium" = "usb" ]]; then
-                mediumpath="../other/"
-                mediumpathreal='other'
-            else
-                mediumpath=""
+            if [[ "$medium" = "usb" ]] || [[ "$medium" = "iso" ]]; then
                 mediumpathreal='iso'
             fi
             filepath="${asset_root}/${mediumpathreal}/OI-hipster-${mediumtype}-${build}.${medium}"
             if [ ! -f ${filepath} ]; then continue; fi
             echo -ne "  $flavor\t$arch\t$medium\t"
-            $client isos post iso=${mediumpath}OI-hipster-${mediumtype}-${build}.${medium} DISTRI=openindiana VERSION=hipster FLAVOR=$flavor ARCH=$arch BUILD=$build "$filter"
+            $client isos post iso=OI-hipster-${mediumtype}-${build}.${medium} DISTRI=openindiana VERSION=hipster FLAVOR=$flavor ARCH=$arch BUILD=$build "$filter"
         done
     done
 fi
