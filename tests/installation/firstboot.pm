@@ -28,7 +28,7 @@ sub run {
         send_key 'ret';
         if (get_var('FLAVOR', '') =~ /Minimal/) {
             # Can't use pkg_call() as we don't have sudo, yet.
-            assert_script_run('pkg install sudo wget', 200);
+            assert_script_run('pkg install sudo wget', 400);
         }
         else {
             assert_script_run("sed -i '/$testapi::username/d' /etc/sudoers");
