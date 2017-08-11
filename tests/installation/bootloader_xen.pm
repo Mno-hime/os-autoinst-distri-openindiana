@@ -26,8 +26,6 @@ sub run() {
     my $svirt = select_console('svirt');
     my $name  = $svirt->name;
 
-    my $xenconsole = 'hvc0';
-
     if ($vmm_type eq 'linux') {
         $svirt->change_domain_element(os => initrd => "/var/lib/openqa/share/factory/tmp/$name.initrd");
         # <os><kernel>...</kernel></os> defaults to grub.xen, we need to remove
@@ -51,7 +49,6 @@ sub run() {
             });
     }
 
-    # In JeOS and netinstall we don't have ISO media, for the rest we have to attach it.
     my $isofile = get_required_var('ISO');
     $svirt->add_disk(
         {
@@ -120,7 +117,7 @@ sub run() {
     $svirt->define_and_start;
 
     # Connects to a guest VNC session on Xen HVM, illumos PV won't set console framebuffer.
-    select_console('sut') if ($vmm_type eq 'hvm');
+    select_console('sut') if $vmm_type eq 'hvm';
 }
 
 1;
