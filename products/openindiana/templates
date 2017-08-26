@@ -931,7 +931,7 @@
                       distri   => "openindiana",
                       flavor   => "Server",
                       settings => [
-                                    { key => "QEMURAM", value => 1536 },
+                                    { key => "QEMURAM", value => 2048 },
                                     { key => "VNC_TYPING_LIMIT", value => 10 },
                                   ],
                       version  => "hipster",
@@ -941,7 +941,7 @@
                       distri   => "openindiana",
                       flavor   => "Minimal",
                       settings => [
-                                    { key => "QEMURAM", value => 1024 },
+                                    { key => "QEMURAM", value => 2048 },
                                     { key => "VNC_TYPING_LIMIT", value => 10 },
                                   ],
                       version  => "hipster",
@@ -951,7 +951,7 @@
                       distri   => "openindiana",
                       flavor   => "Server",
                       settings => [
-                                    { key => "QEMURAM", value => 1536 },
+                                    { key => "QEMURAM", value => 2048 },
                                     { key => "VNC_TYPING_LIMIT", value => 10 },
                                   ],
                       version  => "hipster",
@@ -961,7 +961,7 @@
                       distri   => "openindiana",
                       flavor   => "Minimal",
                       settings => [
-                                    { key => "QEMURAM", value => 1024 },
+                                    { key => "QEMURAM", value => 2048 },
                                     { key => "VNC_TYPING_LIMIT", value => 10 },
                                   ],
                       version  => "hipster",
@@ -982,7 +982,7 @@
                       distri   => "openindiana",
                       flavor   => "ServerUSB",
                       settings => [
-                                    { key => "QEMURAM", value => 1536 },
+                                    { key => "QEMURAM", value => 2048 },
                                     { key => "USBBOOT", value => 1 },
                                     { key => "VNC_TYPING_LIMIT", value => 10 },
                                   ],
@@ -993,7 +993,7 @@
                       distri   => "openindiana",
                       flavor   => "MinimalUSB",
                       settings => [
-                                    { key => "QEMURAM", value => 1024 },
+                                    { key => "QEMURAM", value => 2048 },
                                     { key => "USBBOOT", value => 1 },
                                     { key => "VNC_TYPING_LIMIT", value => 10 },
                                   ],
@@ -1004,7 +1004,7 @@
                       distri   => "openindiana",
                       flavor   => "ServerUSB",
                       settings => [
-                                    { key => "QEMURAM", value => 1536 },
+                                    { key => "QEMURAM", value => 2048 },
                                     { key => "USBBOOT", value => 1 },
                                     { key => "VNC_TYPING_LIMIT", value => 10 },
                                   ],
@@ -1015,7 +1015,7 @@
                       distri   => "openindiana",
                       flavor   => "MinimalUSB",
                       settings => [
-                                    { key => "QEMURAM", value => 1024 },
+                                    { key => "QEMURAM", value => 2048 },
                                     { key => "USBBOOT", value => 1 },
                                     { key => "VNC_TYPING_LIMIT", value => 10 },
                                   ],
