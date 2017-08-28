@@ -23,32 +23,31 @@ sub run() {
     pkg_call('install distribution-constructor wget', sudo => 1);
 
     my $snapdate = localtime->strftime('%Y%m%d');
-    for my $variant ('minimal', 'text', 'gui') {
-        my $name = "slim_${variant}_X86.xml";
-        assert_script_run 'wget ' . data_url("toolchain/$name");
+    my $variant  = get_required_var('DC_VARIANT');
+    my $name     = "slim_${variant}_X86.xml";
+    assert_script_run 'wget ' . data_url("toolchain/$name");
 
-        # Build image
-        assert_script_sudo("distro_const build $name", 9000);
+    # Build image
+    assert_script_sudo("distro_const build $name", 9000);
 
-        # Upload logs from construction
-        my $dc_root = "/rpool/dc";
-        assert_script_run "cp `ls -t ${dc_root}/logs/simple-log-* | head -n1` simple-log-$variant.txt";
-        assert_script_run "cp `ls -t ${dc_root}/logs/detail-log-* | head -n1` detail-log-$variant.txt";
-        upload_logs "simple-log-$variant.txt";
-        upload_logs "detail-log-$variant.txt";
+    # Upload logs from construction
+    my $dc_root = "/rpool/dc";
+    assert_script_run "cp `ls -t ${dc_root}/logs/simple-log-* | head -n1` simple-log-$variant.txt";
+    assert_script_run "cp `ls -t ${dc_root}/logs/detail-log-* | head -n1` detail-log-$variant.txt";
+    upload_logs "simple-log-$variant.txt";
+    upload_logs "detail-log-$variant.txt";
 
-        # Upload constructed ISO and USB media as public assets
-        script_run "ls -lh ${dc_root}/media/";
-        for my $medium ('iso', 'usb') {
-            my $upload_filename = "OI-hipster-$variant-$snapdate.$medium";
-            assert_script_sudo "mv ${dc_root}/media/OpenIndiana_${variant}_X86.$medium ${dc_root}/media/$upload_filename";
-            for (1 .. 5) {    # Try to upload image up to five times
-                last unless (upload_asset("${dc_root}/media/$upload_filename", 1, 0, 300));
-            }
-            record_info("$variant$medium", "$upload_filename uploaded successfully");
-            # Save some space on openQA worker as OS image takes 40-45 GB
-            assert_script_sudo "rm -f ${dc_root}/media/$upload_filename";
+    # Upload constructed ISO and USB media as public assets
+    script_run "ls -lh ${dc_root}/media/";
+    for my $medium ('iso', 'usb') {
+        my $upload_filename = "OI-hipster-$variant-$snapdate.$medium";
+        assert_script_sudo "mv ${dc_root}/media/OpenIndiana_${variant}_X86.$medium ${dc_root}/media/$upload_filename";
+        for (1 .. 5) {    # Try to upload image up to five times
+            last unless (upload_asset("${dc_root}/media/$upload_filename", 1, 0, 300));
         }
+        record_info("$variant$medium", "$upload_filename uploaded successfully");
+        # Save some space on openQA worker as OS image takes 40-45 GB
+        assert_script_sudo "rm -f ${dc_root}/media/$upload_filename";
     }
     type_string "df -h > /dev/$testapi::serialdev\n";
 }
