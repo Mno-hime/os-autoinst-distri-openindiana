@@ -1065,7 +1065,6 @@
                       settings => [
                         { key => "DESKTOP", value => "textmode" },
                         { key => "HDDSIZEGB", value => 20 },
-                        { key => "QEMURAM", value => 1536 },
                       ],
                     },
                     {
@@ -1160,7 +1159,6 @@
                         { key => "DESKTOP", value => "textmode" },
                         { key => "HDDSIZEGB", value => 20 },
                         { key => "NUMDISKS", value => 3 },
-                        { key => "QEMURAM", value => 1536 },
                         { key => "ROOT_POOL_TYPE", value => "raidz" },
                       ],
                     },
@@ -1192,7 +1190,6 @@
                           value => "%DISTRI%-%VERSION%-%ARCH%-%BUILD%-%FLAVOR%\@%MACHINE%.qcow2",
                         },
                         { key => "MAX_JOB_TIME", value => 19000 },
-                        { key => "QEMURAM", value => 2048 },
                         { key => "START_AFTER_TEST", value => "create_textmode_hdd" },
                       ],
                     },
