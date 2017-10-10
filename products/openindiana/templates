@@ -1052,7 +1052,7 @@
                       distri   => "openindiana-dcbuild",
                       flavor   => "dcbuild",
                       settings => [
-                                    { key => "QEMURAM", value => 3072 },
+                                    { key => "QEMURAM", value => 2048 },
                                     { key => "VNC_TYPING_LIMIT", value => 10 },
                                   ],
                       version  => "hipster",
@@ -1326,6 +1326,7 @@
                           value => "openindiana-hipster-%ARCH%-%BUILD%-Server\@%MACHINE%.qcow2",
                         },
                         { key => "MAX_JOB_TIME", value => 10800 },
+                        { key => "QEMURAM", value => 3072 },
                       ],
                     },
                   ],
