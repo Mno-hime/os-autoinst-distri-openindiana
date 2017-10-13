@@ -90,7 +90,7 @@ sub init_consoles {
         'vnc-base',
         {
             hostname => 'localhost',
-            port     => get_var('VNC_INSTANCE', 0) + 11022
+            port     => 11022
         });
     if (check_var('BACKEND', 'svirt')) {
         my $hostname = get_var('VIRSH_GUEST');
