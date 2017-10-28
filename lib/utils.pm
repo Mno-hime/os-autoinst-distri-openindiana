@@ -341,28 +341,35 @@ sub power_action {
     my %args   = @_;
     die "'action' was not provided" unless $action;
     console('sut')->disable_vnc_stalls if check_var('BACKEND', 'svirt');
-    if (check_var('DESKTOP', 'mate')) {
-        select_console 'x11';
-        x11_start_program('mate-session-save --shutdown-dialog', undef, {terminal => 0, no_wait => 1});
-        assert_screen 'logoutdialog', 90;
-        $action eq 'poweroff' ? send_key 'alt-s' : send_key 'alt-r';
-        if (check_screen('mate-program-still-running', 5)) {
-            record_soft_failure 'Some program is still running';
-            assert_and_click('shut-down-anyway', 'left', 10, 2);
+    if ($action eq 'poweroff') {
+        power('acpi');
+    }
+    elsif ($action eq 'reboot') {
+        if (check_var('DESKTOP', 'mate')) {
+            select_console 'x11';
+            x11_start_program('mate-session-save --shutdown-dialog', undef, {terminal => 0, no_wait => 1});
+            assert_screen 'logoutdialog', 90;
+            send_key 'alt-r';
+            if (check_screen('mate-program-still-running', 5)) {
+                record_soft_failure 'Some program is still running';
+                assert_and_click('shut-down-anyway', 'left', 10, 2);
+            }
+        }
+        elsif (check_var('DESKTOP', 'textmode')) {
+            my $sudo = $args{nosudo} ? '' : 'sudo';
+            type_string "$sudo $action\n";
         }
     }
-    elsif (check_var('DESKTOP', 'textmode')) {
-        my $sudo = $args{nosudo} ? '' : 'sudo';
-        type_string "$sudo $action\n";
+    else {
+        die "Action '$action' not implemented";
     }
     if (check_var('VIRSH_VMM_FAMILY', 'xen')) {
         assert_shutdown_and_restore_system($action);
     }
-    elsif (check_var('BACKEND', 'qemu')) {    # Linux KVM/QEMU
-        check_screen('press-any-key-to-reboot', 60) if $action eq 'poweroff';
-    }
-    else {                                    # VirtualBox
-        assert_shutdown(90) if $action eq 'poweroff';
+    else {
+        my $timeout = 60;
+        diag "Sleep for $timeout seconds";
+        sleep($timeout) if $action eq 'poweroff';
     }
     reset_consoles;
 }
