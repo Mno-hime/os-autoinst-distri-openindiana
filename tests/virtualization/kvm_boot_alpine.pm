@@ -35,8 +35,11 @@ sub run {
     select_console 'vnc';
     console('vnc')->disable_vnc_stalls;
 
-    send_key_until_needlematch('alpine-isolinux-boot-options', 'tab', 10, 0.5);
-    type_string "virthardened noapic\n";
+    # Disable ACPI to get rid of some problems under illumos KVM
+    # (currently disabled as the solution dos not work reliably enough)
+    #send_key_until_needlematch('alpine-isolinux-boot-options', 'tab', 10, 0.5);
+    #type_string "virthardened noapic\n";
+
     assert_screen('welcome-to-alpine');
 
     select_console 'user-console';
