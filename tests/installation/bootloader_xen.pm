@@ -111,8 +111,7 @@ sub run() {
     $ifacecfg{type} = $virsh_vmm_iface_type;
     $ifacecfg{source} = {$virsh_vmm_iface_type => get_var('VIRSH_VMM_IFACE_TYPE', 'default')};
 
-    # #7186: Disable network interface as it panics illumos kernel
-    #$svirt->add_interface(\%ifacecfg);
+    $svirt->add_interface(\%ifacecfg);
 
     $svirt->define_and_start;
 
