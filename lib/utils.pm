@@ -142,10 +142,12 @@ sub bootloader_hdd {
 }
 
 sub firstboot_setup {
-    assert_screen 'boot-uname',         90;
-    assert_screen 'firstboot-keyboard', 180;
-    send_key 'ret';
-    assert_screen 'firstboot-language';
+    assert_screen 'boot-uname', 90;
+    if (check_var('DESKTOP', 'textmode')) {
+        assert_screen 'firstboot-keyboard', 180;
+        send_key 'ret';
+    }
+    assert_screen 'firstboot-language', 180;
     send_key 'ret';
     assert_screen 'firstboot-language-en-set';
     assert_screen 'firstboot-configuring-devices';
