@@ -23,7 +23,7 @@ sub run() {
     pkg_call('install build-essential', sudo => 1, exitcode => [0, 4]);
 
     # Prepare sources
-    assert_script_run('git clone https://github.com/OpenIndiana/oi-userland.git');
+    assert_script_run('git clone https://github.com/OpenIndiana/oi-userland.git', 200);
     assert_script_run('pushd oi-userland');
     assert_script_run('gmake setup');
 
