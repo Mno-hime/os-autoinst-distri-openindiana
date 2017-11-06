@@ -41,12 +41,15 @@ sub run() {
     my $controller     = get_var('VBOXHDDMODEL') || 'IntelAhci';
     my $controller_2nd = get_var('VBOXHDDMODEL2') || $controller;
     my $usbtype        = get_var('VBOXUSBTYPE', '');                # '' == 'OHCI'
-    $svirt->run_cmd("$vbm modifyvm $name --ostype $ostype --longmode $longmode --memory $qemuram "
-          . " --cpus $qemucpus --boot1 disk --boot2 dvd --vrdeproperty VNCPassword=$testapi::password "
-          . "--vrde on --vrdeaddress '' --vrdeport $instance --vram 4 --accelerate3d off --audio pulse "
-          . "--audiocontroller ac97 --nic1 nat --nictype1 82540EM --cableconnected1 on --mouse usbtablet "
-          . "--ioapic on --apic on --x2apic off --acpi on --biosapic=apic --pae off --rtcuseutc on "
-          . "--chipset ich9 --uart1 0x3F8 4 --uartmode1 tcpserver $vb_serial_port --usb$usbtype on");
+    $svirt->run_cmd("$vbm modifyvm $name --ostype $ostype --boot1 disk --boot2 dvd "
+          . "--cpus $qemucpus --longmode $longmode "
+          . "--memory $qemuram --pagefusion on "
+          . "--vrdeproperty VNCPassword=$testapi::password --vrde on --vrdeaddress '' --vrdeport $instance "
+          . "--vram 4 --audio pulse --audiocontroller ac97 "
+          . "--mouse usbtablet --usb$usbtype on "
+          . "--nic1 nat --nictype1 82540EM --cableconnected1 on "
+          . "--ioapic on --apic on --x2apic off --acpi on --biosapic=apic --rtcuseutc on "
+          . "--chipset ich9 --uart1 0x3F8 4 --uartmode1 tcpserver $vb_serial_port ");
     $svirt->run_cmd("$vbm storagectl $name --name $storage --add " . lc $storage . " --controller $controller --bootable on --hostiocache on");
     if ($storage ne $storage_2nd) {
         $svirt->run_cmd("$vbm storagectl $name --name $storage_2nd --add " . lc $storage_2nd . " --controller $controller_2nd --bootable on --hostiocache on");
