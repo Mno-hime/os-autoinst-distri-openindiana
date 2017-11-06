@@ -59,7 +59,8 @@ sub run() {
     for my $port (1 .. $numdisks) {
         my $hddname = "${homedir}/${name}_${port}";
         $svirt->run_cmd("$vbm createhd --filename $hddname --size " . 1024 * get_var('HDDSIZEGB'));
-        $svirt->run_cmd("$vbm storageattach $name --storagectl $storage_2nd --port $port --device 0 --type hdd --medium ${hddname}.vdi");
+        $svirt->run_cmd("$vbm storageattach $name --storagectl $storage_2nd --port $port --device 0 "
+              . "--type hdd --medium ${hddname}.vdi --nonrotational on --discard on");
     }
     $svirt->run_cmd("$vbm startvm $name --type headless");
     $svirt->run_cmd("netstat -tulpn | grep " . get_var('VIRTUALBOX_SERIAL_PORT'));
