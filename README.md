@@ -11,22 +11,28 @@ Setup your [local openQA instance](https://github.com/os-autoinst/openQA/blob/ma
 
 ### Fork following repositories on GitHub
 
-> https://github.com/Mno-hime/os-autoinst-distri-openindiana
-> https://github.com/Mno-hime/os-autoinst 
-> https://github.com/Mno-hime/os-autoinst-needles-openindiana
+```
+https://github.com/Mno-hime/os-autoinst-distri-openindiana
+https://github.com/Mno-hime/os-autoinst 
+https://github.com/Mno-hime/os-autoinst-needles-openindiana
+```
 
 ### Clone your forks locally
 
-> git clone git@github.com:$YOU/os-autoinst-distri-openindiana.git
-> git clone git@github.com:$YOU/os-autoinst.git os-autoinst-distri-openindiana/os-autoinst/
-> git clone git@github.com:$YOU/os-autoinst-needles-openindiana.git os-autoinst-distri-openindiana/products/openindiana/needles/
-> chmod 0777 os-autoinst-distri-openindiana/products/openindiana/needles/
-> cd os-autoinst-distri-openindiana/
+```
+git clone git@github.com:$YOU/os-autoinst-distri-openindiana.git
+git clone git@github.com:$YOU/os-autoinst.git os-autoinst-distri-openindiana/os-autoinst/
+git clone git@github.com:$YOU/os-autoinst-needles-openindiana.git os-autoinst-distri-openindiana/products/openindiana/needles/
+chmod 0777 os-autoinst-distri-openindiana/products/openindiana/needles/
+cd os-autoinst-distri-openindiana/
+```
 
 ### Prepare your environment
 
-> cpanm --local-lib=~/perl5 local::lib && eval $(perl -I ~/perl5/lib/perl5/ -Mlocal::lib)
-> make prepare
+```
+cpanm --local-lib=~/perl5 local::lib && eval $(perl -I ~/perl5/lib/perl5/ -Mlocal::lib)
+make prepare
+```
 
 Create new branch, do changes, test them in your local openQA instance, run `make test` to verify, that the changes are valid and conform to coding style, and finally create a Pull Request on GitHub.
 
