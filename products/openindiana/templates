@@ -1004,40 +1004,14 @@
                       arch     => "x86_64",
                       distri   => "openindiana",
                       flavor   => "Server",
-                      settings => [
-                                    { key => "QEMURAM", value => 2048 },
-                                    { key => "VNC_TYPING_LIMIT", value => 10 },
-                                  ],
+                      settings => [{ key => "QEMURAM", value => 2048 }],
                       version  => "hipster",
                     },
                     {
                       arch     => "x86_64",
                       distri   => "openindiana",
                       flavor   => "Minimal",
-                      settings => [
-                                    { key => "QEMURAM", value => 2048 },
-                                    { key => "VNC_TYPING_LIMIT", value => 10 },
-                                  ],
-                      version  => "hipster",
-                    },
-                    {
-                      arch     => "i386",
-                      distri   => "openindiana",
-                      flavor   => "Server",
-                      settings => [
-                                    { key => "QEMURAM", value => 2048 },
-                                    { key => "VNC_TYPING_LIMIT", value => 10 },
-                                  ],
-                      version  => "hipster",
-                    },
-                    {
-                      arch     => "i386",
-                      distri   => "openindiana",
-                      flavor   => "Minimal",
-                      settings => [
-                                    { key => "QEMURAM", value => 2048 },
-                                    { key => "VNC_TYPING_LIMIT", value => 10 },
-                                  ],
+                      settings => [{ key => "QEMURAM", value => 2048 }],
                       version  => "hipster",
                     },
                     {
@@ -1058,7 +1032,6 @@
                       settings => [
                                     { key => "QEMURAM", value => 2048 },
                                     { key => "USBBOOT", value => 1 },
-                                    { key => "VNC_TYPING_LIMIT", value => 10 },
                                   ],
                       version  => "hipster",
                     },
@@ -1069,29 +1042,6 @@
                       settings => [
                                     { key => "QEMURAM", value => 2048 },
                                     { key => "USBBOOT", value => 1 },
-                                    { key => "VNC_TYPING_LIMIT", value => 10 },
-                                  ],
-                      version  => "hipster",
-                    },
-                    {
-                      arch     => "i386",
-                      distri   => "openindiana",
-                      flavor   => "ServerUSB",
-                      settings => [
-                                    { key => "QEMURAM", value => 2048 },
-                                    { key => "USBBOOT", value => 1 },
-                                    { key => "VNC_TYPING_LIMIT", value => 10 },
-                                  ],
-                      version  => "hipster",
-                    },
-                    {
-                      arch     => "i386",
-                      distri   => "openindiana",
-                      flavor   => "MinimalUSB",
-                      settings => [
-                                    { key => "QEMURAM", value => 2048 },
-                                    { key => "USBBOOT", value => 1 },
-                                    { key => "VNC_TYPING_LIMIT", value => 10 },
                                   ],
                       version  => "hipster",
                     },
@@ -1099,10 +1049,7 @@
                       arch     => "x86_64",
                       distri   => "openindiana-dcbuild",
                       flavor   => "dcbuild",
-                      settings => [
-                                    { key => "QEMURAM", value => 2048 },
-                                    { key => "VNC_TYPING_LIMIT", value => 10 },
-                                  ],
+                      settings => [{ key => "QEMURAM", value => 2048 }],
                       version  => "hipster",
                     },
                   ],
