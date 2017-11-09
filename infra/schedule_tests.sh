@@ -39,7 +39,12 @@ else
                 mediumpathreal='iso'
             fi
             filepath="${asset_root}/${mediumpathreal}/OI-hipster-${mediumtype}-${build}.${medium}"
-            if [ ! -f ${filepath} ]; then continue; fi
+            if [ ! -f ${filepath} ]; then
+                filepath="${filepath/OI/fixed/OI}"
+                if [ ! -f ${filepath} ]; then
+                    continue;
+                fi
+            fi
             echo -ne "  $flavor\t$arch\t$medium\t"
             $client isos post iso=OI-hipster-${mediumtype}-${build}.${medium} DISTRI=openindiana VERSION=hipster FLAVOR=$flavor ARCH=$arch BUILD=$build "$filter" && ((++products))
         done
