@@ -143,7 +143,7 @@ sub bootloader_hdd {
 
 sub firstboot_setup {
     assert_screen 'boot-uname', 90;
-    if (check_var('DESKTOP', 'textmode')) {
+    if (check_var('DESKTOP', 'textmode') || get_var('BUILD') < 20171031) {
         assert_screen 'firstboot-keyboard', 180;
         send_key 'ret';
     }
