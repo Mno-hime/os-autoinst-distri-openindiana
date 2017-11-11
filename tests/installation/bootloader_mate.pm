@@ -20,21 +20,8 @@ sub run() {
     pre_bootmenu_setup;
     bootloader_dvd;
     firstboot_setup;
-    # For releases before and including 20161030 OI can't use cirrus driver and therefor
-    # boots to 1280x768 px resolution, but we need to get to 1024x768 somehow.
-    if (!check_var('QEMUVGA', 'cirrus') and !check_var('VIRSH_VMM_FAMILY', 'virtualbox')) {
-        assert_screen 'mate-desktop-1280x768', 200;
-        wait_still_screen;
-        # Close About GNOME window
-        if (get_var('BUILD') <= 20160421) {
-            send_key 'alt-c';
-        }
-        mate_change_resolution_1024_768;
-    }
-    else {
-        match_mate_desktop;
-        wait_still_screen;
-    }
+    # LightDM login is not present on Live medium
+    assert_mate;
     mouse_hide;
 
     my $installer = get_var('INSTALLER', 'gui');

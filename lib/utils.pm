@@ -28,6 +28,7 @@ our @EXPORT = qw(
   match_mate_desktop
   lightdm_login
   console_login
+  assert_mate
   wait_boot
   disable_fastreboot
   enable_vt
@@ -203,6 +204,20 @@ sub match_mate_desktop {
         send_key 'ret';
         wait_still_screen;
     }
+}
+
+# For releases before and including 20161030 OI can't use cirrus driver and therefor
+# boots to 1280x768 px resolution, but we need to get to 1024x768 somehow.
+sub assert_mate {
+    if (!check_var('QEMUVGA', 'cirrus') and !check_var('VIRSH_VMM_FAMILY', 'virtualbox')) {
+        assert_screen 'mate-desktop-1280x768', 200;
+        wait_still_screen;
+        mate_change_resolution_1024_768;
+    }
+    else {
+        wait_still_screen;
+    }
+    match_mate_desktop;
 }
 
 sub wait_boot {

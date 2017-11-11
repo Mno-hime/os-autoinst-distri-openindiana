@@ -43,15 +43,6 @@ sub run {
         send_key 'ret';
     }
     elsif (check_var('DESKTOP', 'mate')) {
-        if (!check_var('QEMUVGA', 'cirrus') and !check_var('VIRSH_VMM_FAMILY', 'virtualbox')) {
-            assert_screen 'mate-desktop-1280x768', 90;
-            wait_still_screen;
-            mate_change_resolution_1024_768;
-        }
-        else {
-            match_mate_desktop;
-            wait_still_screen;
-        }
         mouse_hide;
 
         x11_start_program 'xterm';
