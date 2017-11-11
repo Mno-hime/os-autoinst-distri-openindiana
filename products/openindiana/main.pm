@@ -38,46 +38,49 @@ sub load_consoletests {
     loadtest 'console/pkg_uninstall';
     loadtest 'console/pkg_repository';
     loadtest 'console/pkg_p5p_package_archive';
-    loadtest 'console/be_boot_to_new_be' unless exists $features{'update'};
+    loadtest 'console/be_boot_to_new_be' unless exists $features{update};
 }
 
 sub load_featuretests {
     if (%features) {
-        if (exists $features{'update'}) {
+        if (exists $features{update}) {
             loadtest 'update/pkg_update_to_latest_packages';
+            load_consoletests;
         }
-        if (exists $features{'toolchain'}) {
+        if (exists $features{toolchain}) {
             loadtest 'toolchain/pkgsrc_deploy';
             loadtest 'toolchain/pkgsrc_pkgin_install_packages';
             loadtest 'toolchain/pkgsrc_manage_packages';
             loadtest 'toolchain/building_with_oi_userland';
         }
-        if (exists $features{'distribution_constructor'}) {
+        if (exists $features{distribution_constructor}) {
             loadtest 'toolchain/distribution_constructor';
         }
-        if (exists $features{'virtualization'}) {
+        if (exists $features{virtualization}) {
             loadtest 'virtualization/kvm_boot_alpine';
             loadtest 'virtualization/kvm_boot_firefly';
         }
-        if (exists $features{'consoletests'}) {
+        if (exists $features{consoletests}) {
             load_consoletests;
         }
     }
 }
 
-my $vmm_family = get_var('VIRSH_VMM_FAMILY', '');
+my $vmm_family = get_var('VIRSH_VMM_FAMILY');
+my $desktop    = get_required_var('DESKTOP');
+my $brf        = get_var('BOOTLOADER_REGRESSION_FEATURE');
 
 if (get_var('HDD_1')) {
     loadtest 'boot/boot_from_hdd';
 }
 else {
     loadtest "installation/bootloader_$vmm_family" if $vmm_family;
-    if (get_var('BOOTLOADER_REGRESSION_FEATURE')) {
-        loadtest 'regressions/' . get_required_var('BOOTLOADER_REGRESSION_FEATURE');
+    if ($brf) {
+        loadtest "regressions/$brf";
         return 1;
     }
-    loadtest 'installation/bootloader_' . get_var('DESKTOP');
-    return 1 if (get_var('INSTALLONLY'));
+    loadtest "installation/bootloader_$desktop";
+    return 1 if get_var('INSTALLONLY');
     loadtest 'installation/firstboot';
     loadtest 'installation/zpool_rpool_setup';
 }
