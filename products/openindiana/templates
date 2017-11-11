@@ -676,6 +676,97 @@
                       },
                       test_suite => { name => "create_mate_hdd" },
                     },
+                    {
+                      group_name => "openindiana",
+                      machine => { name => "64bit" },
+                      prio => 50,
+                      product => {
+                        arch    => "x86_64",
+                        distri  => "openindiana",
+                        flavor  => "Live",
+                        group   => "openindiana-hipster-Live",
+                        version => "hipster",
+                      },
+                      test_suite => { name => "upgrade_mate_20171031" },
+                    },
+                    {
+                      group_name => "openindiana",
+                      machine => { name => "64bit" },
+                      prio => 50,
+                      product => {
+                        arch    => "x86_64",
+                        distri  => "openindiana",
+                        flavor  => "Live",
+                        group   => "openindiana-hipster-Live",
+                        version => "hipster",
+                      },
+                      test_suite => { name => "upgrade_mate_20170502" },
+                    },
+                    {
+                      group_name => "openindiana",
+                      machine => { name => "64bit" },
+                      prio => 50,
+                      product => {
+                        arch    => "x86_64",
+                        distri  => "openindiana",
+                        flavor  => "Minimal",
+                        group   => "openindiana-hipster-Minimal",
+                        version => "hipster",
+                      },
+                      test_suite => { name => "upgrade_textmode_20171031" },
+                    },
+                    {
+                      group_name => "openindiana",
+                      machine => { name => "64bit" },
+                      prio => 50,
+                      product => {
+                        arch    => "x86_64",
+                        distri  => "openindiana",
+                        flavor  => "Server",
+                        group   => "openindiana-hipster-Server",
+                        version => "hipster",
+                      },
+                      test_suite => { name => "upgrade_textmode_20161030" },
+                    },
+                    {
+                      group_name => "openindiana",
+                      machine => { name => "64bit" },
+                      prio => 50,
+                      product => {
+                        arch    => "x86_64",
+                        distri  => "openindiana",
+                        flavor  => "Server",
+                        group   => "openindiana-hipster-Server",
+                        version => "hipster",
+                      },
+                      test_suite => { name => "upgrade_textmode_20170502" },
+                    },
+                    {
+                      group_name => "openindiana",
+                      machine => { name => "64bit" },
+                      prio => 50,
+                      product => {
+                        arch    => "x86_64",
+                        distri  => "openindiana",
+                        flavor  => "Server",
+                        group   => "openindiana-hipster-Server",
+                        version => "hipster",
+                      },
+                      test_suite => { name => "upgrade_textmode_20171031" },
+                    },
+                    {
+                      group_name => "openindiana",
+                      machine => { name => "64bit-stdvga" },
+                      prio => 50,
+                      product => {
+                        arch    => "x86_64",
+                        distri  => "openindiana",
+                        flavor  => "Live",
+                        group   => "openindiana-hipster-Live",
+                        version => "hipster",
+                      },
+                      test_suite => { name => "upgrade_mate_20161030" },
+                    },
                   ],
   Machines     => [
                     {
@@ -1322,6 +1413,84 @@
                         },
                         { key => "MAX_JOB_TIME", value => 10800 },
                         { key => "QEMURAM", value => 3072 },
+                      ],
+                    },
+                    {
+                      description => "Update installed 2017.04 Live system to latest packages in oi/hipster branch.",
+                      name => "upgrade_mate_20170502",
+                      settings => [
+                        { key => "BOOTFROM", value => "c" },
+                        { key => "DESKTOP", value => "mate" },
+                        { key => "FEATURES", value => "update" },
+                        {
+                          key => "HDD_1",
+                          value => "%DISTRI%-%VERSION%-%ARCH%-20170502-%FLAVOR%\@%MACHINE%.qcow2",
+                        },
+                      ],
+                    },
+                    {
+                      description => "Update installed 2017.04 Server/Minimal system to latest packages in oi/hipster branch.",
+                      name => "upgrade_textmode_20170502",
+                      settings => [
+                        { key => "BOOTFROM", value => "c" },
+                        { key => "DESKTOP", value => "textmode" },
+                        { key => "FEATURES", value => "update" },
+                        {
+                          key => "HDD_1",
+                          value => "%DISTRI%-%VERSION%-%ARCH%-20170502-%FLAVOR%\@%MACHINE%.qcow2",
+                        },
+                      ],
+                    },
+                    {
+                      description => "Update installed 2016.10 Server/Minimal system to latest packages in oi/hipster branch.",
+                      name => "upgrade_textmode_20161030",
+                      settings => [
+                        { key => "BOOTFROM", value => "c" },
+                        { key => "DESKTOP", value => "textmode" },
+                        { key => "FEATURES", value => "update" },
+                        {
+                          key => "HDD_1",
+                          value => "%DISTRI%-%VERSION%-%ARCH%-20161030-%FLAVOR%\@%MACHINE%.qcow2",
+                        },
+                      ],
+                    },
+                    {
+                      description => "Update installed 2017.10 Live system to latest packages in oi/hipster branch.",
+                      name => "upgrade_mate_20171031",
+                      settings => [
+                        { key => "BOOTFROM", value => "c" },
+                        { key => "DESKTOP", value => "mate" },
+                        { key => "FEATURES", value => "update" },
+                        {
+                          key => "HDD_1",
+                          value => "%DISTRI%-%VERSION%-%ARCH%-20171031-%FLAVOR%\@%MACHINE%.qcow2",
+                        },
+                      ],
+                    },
+                    {
+                      description => "Update installed 2017.10 Server/Minimal system to latest packages in oi/hipster branch.",
+                      name => "upgrade_textmode_20171031",
+                      settings => [
+                        { key => "BOOTFROM", value => "c" },
+                        { key => "DESKTOP", value => "textmode" },
+                        { key => "FEATURES", value => "update" },
+                        {
+                          key => "HDD_1",
+                          value => "%DISTRI%-%VERSION%-%ARCH%-20171031-%FLAVOR%\@%MACHINE%.qcow2",
+                        },
+                      ],
+                    },
+                    {
+                      description => "Update installed 2016.10 Live system to latest packages in oi/hipster branch.\n\nNote: This test suite has to run with QEMUVGA=std (that is with the variable directly or on MACHINE=64bit-std), because cirrus driver in 2016.10 is broken.",
+                      name => "upgrade_mate_20161030",
+                      settings => [
+                        { key => "BOOTFROM", value => "c" },
+                        { key => "DESKTOP", value => "mate" },
+                        { key => "FEATURES", value => "update" },
+                        {
+                          key => "HDD_1",
+                          value => "%DISTRI%-%VERSION%-%ARCH%-20161030-%FLAVOR%\@64bit.qcow2",
+                        },
                       ],
                     },
                   ],
