@@ -31,9 +31,15 @@ sub loadtest {
 }
 
 sub set_defaults_for_username_and_password {
+    # Installed system's credentials
     $testapi::username = 'robot';
     $testapi::password = 'nots3cr3t';
     $testapi::realname = 'Karel Capek';
+
+    # Live medium's credentials
+    $testapi::live_user_name     = 'jack';
+    $testapi::live_user_password = 'jack';
+    $testapi::live_root_password = 'openindiana';
 }
 
 1;
