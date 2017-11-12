@@ -114,12 +114,6 @@ sub pre_bootmenu_setup {
 sub bootloader_dvd {
     if (check_var('DESKTOP', 'mate')) {
         assert_screen 'bootloader-menu-main-screen-media-boot', 90;
-        # Snapshots before 20161030 had GRUB bootloader,
-        # which we don't want to test.
-        unless (get_var('BUILD') >= 20161030) {
-            send_key 'ret';
-            return;
-        }
     }
     elsif (check_var('DESKTOP', 'textmode')) {
         assert_screen 'bootloader-menu-main-screen-media-boot-textmode', 90;
