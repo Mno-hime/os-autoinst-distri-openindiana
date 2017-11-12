@@ -16,6 +16,20 @@ use testapi;
 use utils;
 use installer 'text_installer';
 
+sub check_ssh_in_live_environment {
+    x11_start_program('xterm');
+    assert_script_run('pgrep -l sshd');
+    my $the_illumos_project = 'The Illumos Project';
+    type_string qq(cat > sshlogin.exp <<-END
+spawn ssh -o "StrictHostKeyChecking no" $testapi::live_user_name\@localhost
+expect "assword:"
+send "$testapi::live_user_password\\r"
+expect "$the_illumos_project"
+END\n);
+    assert_script_run "expect -f sshlogin.exp | grep --color=always '$the_illumos_project'";
+    type_string "exit\n";
+}
+
 sub run() {
     pre_bootmenu_setup;
     bootloader_dvd;
@@ -23,6 +37,11 @@ sub run() {
     # LightDM login is not present on Live medium
     assert_mate;
     mouse_hide;
+
+    if (get_var('SSH_IN_LIVE_ENVIRONMENT')) {
+        check_ssh_in_live_environment;
+        return 1;
+    }
 
     my $installer = get_var('INSTALLER', 'gui');
     # GUI installer

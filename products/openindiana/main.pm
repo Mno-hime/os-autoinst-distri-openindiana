@@ -80,7 +80,7 @@ else {
         return 1;
     }
     loadtest "installation/bootloader_$desktop";
-    return 1 if get_var('INSTALLONLY');
+    return 1 if get_var('INSTALLONLY') || get_var('SSH_IN_LIVE_ENVIRONMENT');
     loadtest 'installation/firstboot';
     loadtest 'installation/zpool_rpool_setup';
 }

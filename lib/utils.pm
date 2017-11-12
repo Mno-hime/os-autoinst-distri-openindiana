@@ -118,6 +118,14 @@ sub bootloader_dvd {
     elsif (check_var('DESKTOP', 'textmode')) {
         assert_screen 'bootloader-menu-main-screen-media-boot-textmode', 90;
     }
+    if (get_var('SSH_IN_LIVE_ENVIRONMENT')) {
+        send_key '7';
+        assert_screen 'bootloader-menu-oi-extras';
+        send_key '4';
+        assert_screen 'bootloader-menu-oi-extras-ssh-enabled';
+        send_key '1';
+        assert_screen 'bootloader-menu-main-screen-media-boot';
+    }
     send_key '5';
     assert_screen 'bootloader-menu-configuration';
     send_key '1';
@@ -138,14 +146,17 @@ sub bootloader_hdd {
 
 sub firstboot_setup {
     assert_screen 'boot-uname', 90;
-    if (check_var('DESKTOP', 'textmode') || get_var('BUILD') < 20171031) {
-        assert_screen 'firstboot-keyboard', 180;
+    # Firstboot configuration is not being asked for when SSH is on
+    unless (get_var('SSH_IN_LIVE_ENVIRONMENT')) {
+        if (check_var('DESKTOP', 'textmode') || get_var('BUILD') < 20171031) {
+            assert_screen 'firstboot-keyboard', 180;
+            send_key 'ret';
+        }
+        assert_screen 'firstboot-language', 180;
         send_key 'ret';
+        assert_screen 'firstboot-language-en-set';
     }
-    assert_screen 'firstboot-language', 180;
-    send_key 'ret';
-    assert_screen 'firstboot-language-en-set';
-    assert_screen 'firstboot-configuring-devices';
+    assert_screen 'firstboot-configuring-devices', get_var('SSH_IN_LIVE_ENVIRONMENT') ? 200 : undef;
 }
 
 sub mate_change_resolution {
