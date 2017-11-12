@@ -24,7 +24,7 @@ our @EXPORT = qw(
   bootloader_dvd
   bootloader_hdd
   firstboot_setup
-  mate_change_resolution_1024_768
+  mate_change_resolution
   match_mate_desktop
   lightdm_login
   console_login
@@ -154,14 +154,16 @@ sub firstboot_setup {
     assert_screen 'firstboot-configuring-devices';
 }
 
-sub mate_change_resolution_1024_768 {
-    x11_start_program 'xrandr --output default --mode 1024x768';
+sub mate_change_resolution {
+    my $output = check_var('VIRSH_VMM_FAMILY', 'virtualbox') ? 'VGA-0' : 'default';
+    x11_start_program "xrandr --output $output --mode 1024x768";
     assert_screen 'mate-desktop';
     wait_still_screen;
 }
 
 sub lightdm_login {
     assert_screen 'lightdm', 280;
+    mouse_hide;
     wait_idle;
     type_string $testapi::username;
     send_key 'tab';
@@ -206,13 +208,20 @@ sub match_mate_desktop {
     }
 }
 
-# For releases before and including 20161030 OI can't use cirrus driver and therefor
-# boots to 1280x768 px resolution, but we need to get to 1024x768 somehow.
+# For releases before and including 20161030 OI can't use cirrus driver on QEMU
+# and therefor boots to 1280x768 px resolution, similarly VirtualBox after build
+# 20171111 has vboxvideo X11 driver, and defaults to 800x600, but we need to
+# get to 1024x768 somehow.
 sub assert_mate {
-    if (!check_var('QEMUVGA', 'cirrus') and !check_var('VIRSH_VMM_FAMILY', 'virtualbox')) {
+    if (check_var('BACKEND', 'qemu') && !check_var('QEMUVGA', 'cirrus')) {
         assert_screen 'mate-desktop-1280x768', 200;
         wait_still_screen;
-        mate_change_resolution_1024_768;
+        mate_change_resolution;
+    }
+    elsif (check_var('VIRSH_VMM_FAMILY', 'virtualbox') && get_var('BUILD') >= 20171111) {
+        assert_screen 'mate-desktop-800x600', 200;
+        wait_still_screen;
+        mate_change_resolution;
     }
     else {
         wait_still_screen;
