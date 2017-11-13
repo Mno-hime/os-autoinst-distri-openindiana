@@ -43,7 +43,7 @@ sub run() {
     my $controller_2nd = get_var('VBOXHDDMODEL2') || $controller;
     my $usbtype        = get_var('VBOXUSBTYPE', '');                # '' == 'OHCI'
     $svirt->run_cmd("$vbm modifyvm $name --ostype $ostype --boot1 disk --boot2 dvd "
-          . "--cpus $qemucpus --longmode $longmode --vtxvpid on "
+          . "--cpus $qemucpus --longmode $longmode "
           . "--memory $qemuram --pagefusion on "
           . "--vrdeproperty VNCPassword=$testapi::password --vrde on --vrdeaddress '' --vrdeport $instance "
           . "--vram 4 --audio pulse --audiocontroller ac97 "
