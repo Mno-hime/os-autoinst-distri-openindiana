@@ -14,7 +14,7 @@ use base 'basetest';
 
 use testapi;
 use strict;
-use utils;
+use utils 'clear_console';
 
 sub new {
     my ($class, $args) = @_;
