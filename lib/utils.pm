@@ -25,6 +25,7 @@ our @EXPORT = qw(
   bootloader_hdd
   firstboot_setup
   mate_change_resolution
+  mate_set_resolution_1024_768
   match_mate_desktop
   lightdm_login
   console_login
@@ -196,6 +197,20 @@ sub console_login {
     send_key 'ret';
 }
 
+sub mate_set_resolution_1024_768 {
+    # Make 1024x768 resolution permanent
+    x11_start_program 'mate-display-properties';
+    send_key 'alt-tab';    # Workaround: Pop-up the window
+    assert_screen 'mate-display-properties';
+    send_key 'alt-r';
+    send_key 'end';
+    send_key_until_needlematch('mate-display-properties-1024-768', 'up', 5);
+    send_key 'alt-a';
+    assert_and_click('display-looks-ok-buton', 'left', 10, 2);
+    assert_screen 'mate-display-properties';
+    send_key 'alt-c';
+}
+
 sub match_mate_desktop {
     unless (check_screen('mate-desktop', 200)) {
         if (check_screen 'mate-desktop-missing-icons') {
@@ -222,11 +237,13 @@ sub assert_mate {
         assert_screen 'mate-desktop-1280x768', 200;
         wait_still_screen;
         mate_change_resolution;
+        mate_set_resolution_1024_768;
     }
     elsif (check_var('VIRSH_VMM_FAMILY', 'virtualbox') && get_var('BUILD') >= 20171111) {
         assert_screen 'mate-desktop-800x600', 200;
         wait_still_screen;
         mate_change_resolution;
+        mate_set_resolution_1024_768;
     }
     else {
         wait_still_screen;
@@ -246,6 +263,7 @@ sub wait_boot {
     }
     if (check_var('DESKTOP', 'mate')) {
         lightdm_login;
+        assert_mate;
         match_mate_desktop;
     }
     elsif (check_var('DESKTOP', 'textmode')) {

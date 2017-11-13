@@ -78,17 +78,11 @@ sub run {
     select_console 'user-console' if check_var('DESKTOP', 'textmode');
 
     if (check_var('DESKTOP', 'mate')) {
-        type_string "exit\n";    # exit xterm
-        if (!check_var('QEMUVGA', 'cirrus') and !check_var('VIRSH_VMM_FAMILY', 'virtualbox')) {
-            # Make 1024x768 resolution permanent
-            x11_start_program 'mate-display-properties';
-            assert_screen 'mate-display-properties';
-            send_key 'alt-a';
-            assert_screen 'display-looks-ok';
-            send_key 'ret';
-            assert_screen 'mate-display-properties';
-            send_key 'alt-c';
+        if ((check_var('BACKEND', 'qemu') && !check_var('QEMUVGA', 'cirrus')) || (check_var('VIRSH_VMM_FAMILY', 'virtualbox') && get_var('BUILD') >= 20171111))
+        {
+            mate_set_resolution_1024_768;
         }
+        type_string "exit\n";    # exit xterm
     }
 }
 
