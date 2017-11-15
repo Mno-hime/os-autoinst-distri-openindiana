@@ -230,13 +230,13 @@ sub match_mate_desktop {
 # 20171111 has vboxvideo X11 driver, and defaults to 800x600, but we need to
 # get to 1024x768 somehow.
 sub assert_mate {
-    if (check_var('BACKEND', 'qemu') && !check_var('QEMUVGA', 'cirrus')) {
+    if (!check_var('BOOTFROM', 'c') && check_var('BACKEND', 'qemu') && !check_var('QEMUVGA', 'cirrus')) {
         assert_screen 'mate-desktop-1280x768', 200;
         wait_still_screen;
         mate_change_resolution;
         mate_set_resolution_1024_768;
     }
-    elsif (check_var('VIRSH_VMM_FAMILY', 'virtualbox') && get_var('BUILD') >= 20171111) {
+    elsif (!check_var('BOOTFROM', 'c') && check_var('VIRSH_VMM_FAMILY', 'virtualbox') && get_var('BUILD') >= 20171111) {
         assert_screen 'mate-desktop-800x600', 200;
         wait_still_screen;
         mate_change_resolution;
