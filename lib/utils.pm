@@ -202,9 +202,6 @@ sub mate_set_resolution_1024_768 {
     x11_start_program 'mate-display-properties';
     send_key 'alt-tab';    # Workaround: Pop-up the window
     assert_screen 'mate-display-properties';
-    send_key 'alt-r';
-    send_key 'end';
-    send_key_until_needlematch('mate-display-properties-1024-768', 'up', 5);
     send_key 'alt-a';
     assert_and_click('display-looks-ok-buton', 'left', 10, 2);
     assert_screen 'mate-display-properties';

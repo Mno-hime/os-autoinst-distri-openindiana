@@ -78,11 +78,11 @@ sub run {
     select_console 'user-console' if check_var('DESKTOP', 'textmode');
 
     if (check_var('DESKTOP', 'mate')) {
+        type_string "exit\n";    # exit xterm
         if ((check_var('BACKEND', 'qemu') && !check_var('QEMUVGA', 'cirrus')) || (check_var('VIRSH_VMM_FAMILY', 'virtualbox') && get_var('BUILD') >= 20171111))
         {
             mate_set_resolution_1024_768;
         }
-        type_string "exit\n";    # exit xterm
     }
 }
 
