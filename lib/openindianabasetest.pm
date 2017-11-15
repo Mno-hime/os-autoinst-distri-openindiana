@@ -38,6 +38,10 @@ sub set_standard_prompt {
     $testapi::distri->set_standard_prompt;
 }
 
+sub test_flags() {
+    return {fatal => 1};
+}
+
 1;
 
 # vim: set sw=4 et:
