@@ -1134,10 +1134,7 @@
                       arch     => "x86_64",
                       distri   => "openindiana",
                       flavor   => "Live",
-                      settings => [
-                                    { key => "QEMURAM", value => 2048 },
-                                    { key => "VNC_TYPING_LIMIT", value => 5 },
-                                  ],
+                      settings => [{ key => "QEMURAM", value => 2048 }],
                       version  => "hipster",
                     },
                     {
@@ -1161,7 +1158,6 @@
                       settings => [
                                     { key => "QEMURAM", value => 2048 },
                                     { key => "USBBOOT", value => 1 },
-                                    { key => "VNC_TYPING_LIMIT", value => 5 },
                                   ],
                       version  => "hipster",
                     },
@@ -1276,6 +1272,7 @@
                           key => "HDD_1",
                           value => "%DISTRI%-%VERSION%-%ARCH%-%BUILD%-%FLAVOR%\@%MACHINE%.qcow2",
                         },
+                        { key => "QEMURAM", value => 3072 },
                         { key => "START_AFTER_TEST", value => "create_mate_hdd" },
                       ],
                     },
@@ -1302,6 +1299,7 @@
                           key => "HDD_1",
                           value => "%DISTRI%-%VERSION%-%ARCH%-%BUILD%-%FLAVOR%\@%MACHINE%.qcow2",
                         },
+                        { key => "QEMURAM", value => 3072 },
                         { key => "START_AFTER_TEST", value => "create_textmode_hdd" },
                       ],
                     },
@@ -1455,6 +1453,7 @@
                           key => "HDD_1",
                           value => "%DISTRI%-%VERSION%-%ARCH%-20170502-%FLAVOR%\@%MACHINE%.qcow2",
                         },
+                        { key => "QEMURAM", value => 3072 },
                       ],
                     },
                     {
@@ -1468,6 +1467,7 @@
                           key => "HDD_1",
                           value => "%DISTRI%-%VERSION%-%ARCH%-20170502-%FLAVOR%\@%MACHINE%.qcow2",
                         },
+                        { key => "QEMURAM", value => 3072 },
                       ],
                     },
                     {
@@ -1481,6 +1481,7 @@
                           key => "HDD_1",
                           value => "%DISTRI%-%VERSION%-%ARCH%-20161030-%FLAVOR%\@%MACHINE%.qcow2",
                         },
+                        { key => "QEMURAM", value => 3072 },
                       ],
                     },
                     {
@@ -1494,6 +1495,7 @@
                           key => "HDD_1",
                           value => "%DISTRI%-%VERSION%-%ARCH%-20171031-%FLAVOR%\@%MACHINE%.qcow2",
                         },
+                        { key => "QEMURAM", value => 3072 },
                       ],
                     },
                     {
@@ -1507,6 +1509,7 @@
                           key => "HDD_1",
                           value => "%DISTRI%-%VERSION%-%ARCH%-20171031-%FLAVOR%\@%MACHINE%.qcow2",
                         },
+                        { key => "QEMURAM", value => 3072 },
                       ],
                     },
                     {
@@ -1520,6 +1523,7 @@
                           key => "HDD_1",
                           value => "%DISTRI%-%VERSION%-%ARCH%-20161030-%FLAVOR%\@64bit.qcow2",
                         },
+                        { key => "QEMURAM", value => 3072 },
                       ],
                     },
                     {
