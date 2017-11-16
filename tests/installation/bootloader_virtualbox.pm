@@ -14,6 +14,21 @@ use base 'basetest';
 use strict;
 use warnings;
 use testapi;
+use File::Basename 'basename';
+
+sub copy_medium_to_cache {
+    my ($medium)      = @_;
+    my $cachedir      = get_required_var('CACHEDIRECTORY');
+    my $cached_medium = `find $cachedir -name $medium -type f`;
+    diag "Cached medium: $cached_medium";
+    return $cached_medium if $cached_medium;
+    my $assetdir    = get_required_var('ASSETDIR');
+    my $medium_path = `find /var/lib/libvirt/images/ $assetdir -name $medium | tail -n1 | tr -d '\n'`;
+    diag "Medium path: ${medium_path}; downloading...";
+    die "Can't find $medium in defined paths" unless $medium_path;
+    `cp -vf $medium_path $cachedir` || die "Can't copy $medium_path to $cachedir";
+    return "${cachedir}/${medium}";
+}
 
 sub run() {
     my $svirt = select_console('svirt');
@@ -41,7 +56,8 @@ sub run() {
     my $storage_2nd    = uc(get_var('VBOXHDDTYPE2') || $storage);
     my $controller     = get_var('VBOXHDDMODEL') || 'IntelAhci';
     my $controller_2nd = get_var('VBOXHDDMODEL2') || $controller;
-    my $usbtype        = get_var('VBOXUSBTYPE', '');                # '' == 'OHCI'
+    my $usbtype        = get_var('VBOXUSBTYPE', '');                      # '' == 'OHCI'
+    my $iso            = copy_medium_to_cache(basename get_var('ISO'));
     $svirt->run_cmd("$vbm modifyvm $name --ostype $ostype --boot1 disk --boot2 dvd "
           . "--cpus $qemucpus --longmode $longmode "
           . "--memory $qemuram --pagefusion on "
@@ -55,7 +71,7 @@ sub run() {
     if ($storage ne $storage_2nd) {
         $svirt->run_cmd("$vbm storagectl $name --name $storage_2nd --add " . lc $storage_2nd . " --controller $controller_2nd --bootable on --hostiocache on");
     }
-    $svirt->run_cmd("$vbm storageattach $name --storagectl $storage --port 0 --device 0 --type dvddrive --medium " . get_var('ISO'));
+    $svirt->run_cmd("$vbm storageattach $name --storagectl $storage --port 0 --device 0 --type dvddrive --medium $iso");
     my $numdisks = get_var('NUMDISKS');
     for my $port (1 .. $numdisks) {
         my $hddname = "${homedir}/${name}_${port}";
@@ -73,6 +89,10 @@ sub run() {
 
     # connects to a guest VNC session
     select_console('sut');
+}
+
+sub test_flags() {
+    return {fatal => 1};
 }
 
 1;
