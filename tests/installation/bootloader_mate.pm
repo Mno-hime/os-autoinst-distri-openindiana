@@ -89,8 +89,14 @@ sub run() {
         # Locale
         assert_screen 'locale-english';
         send_key 'alt-t';
-        send_key 'end';
-        send_key_until_needlematch('locale-territory-us', 'up');
+        # Usually the expected territory ('US') is set by default, but it might now
+        # and we shoud rather make sure in here. And because sometimes the 'end'
+        # does the change to 'Zimbabwe' actually later than the territory is matched
+        # in `send_key_until_needlematch` we do `check_screen` beforehand.
+        unless (check_screen('locale-territory-us')) {
+            send_key 'end';
+            send_key_until_needlematch('locale-territory-us', 'up');
+        }
         send_key 'alt-n';
         # Setup users
         assert_screen 'user-setup';
