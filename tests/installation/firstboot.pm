@@ -61,6 +61,7 @@ sub run {
         type_string "$testapi::username ALL=(ALL) NOPASSWD: ALL";
         send_key 'esc';
         type_string 'ZZ';
+        wait_still_screen;
         type_string "exit\n";    # Quit XTerm
         x11_start_program 'xterm';
     }
