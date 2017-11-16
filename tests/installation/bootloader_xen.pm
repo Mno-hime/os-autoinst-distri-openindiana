@@ -119,4 +119,8 @@ sub run() {
     select_console('sut') if $vmm_type eq 'hvm';
 }
 
+sub test_flags() {
+    return {fatal => 1};
+}
+
 1;

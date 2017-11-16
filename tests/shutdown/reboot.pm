@@ -27,4 +27,8 @@ sub run() {
     select_console 'user-console' if check_var('DESKTOP', 'textmode');
 }
 
+sub test_flags() {
+    return {fatal => 1};
+}
+
 1;
