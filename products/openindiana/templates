@@ -2,6 +2,19 @@
   JobTemplates => [
                     {
                       group_name => "openindiana",
+                      machine => { name => "vbox64_pcie_nvme" },
+                      prio => 50,
+                      product => {
+                        arch    => "x86_64",
+                        distri  => "openindiana",
+                        flavor  => "Server",
+                        group   => "openindiana-hipster-Server",
+                        version => "hipster",
+                      },
+                      test_suite => { name => "installation_textmode_raidz" },
+                    },
+                    {
+                      group_name => "openindiana",
                       machine => { name => "64bit" },
                       prio => 50,
                       product => {
@@ -597,6 +610,19 @@
                         version => "hipster",
                       },
                       test_suite => { name => "upgrade_textmode_20171031" },
+                    },
+                    {
+                      group_name => "openindiana",
+                      machine => { name => "64bit-nvme" },
+                      prio => 50,
+                      product => {
+                        arch    => "x86_64",
+                        distri  => "openindiana",
+                        flavor  => "Minimal",
+                        group   => "openindiana-hipster-Minimal",
+                        version => "hipster",
+                      },
+                      test_suite => { name => "installation_textmode_mirror" },
                     },
                     {
                       group_name => "openindiana",
