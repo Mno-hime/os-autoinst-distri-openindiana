@@ -4,8 +4,11 @@ sudo=$1
 
 mkdir system_log_gathering
 pushd system_log_gathering
+$sudo uname -a > uname-a.txt
 $sudo prtconf -v > prtconf-v.txt
-$sudo dmesg > dmesg.txt
+$sudo format < /dev/null > format.txt 2>&1
+$sudo nvmeadm list > nvmeadm-list.txt 2>&1
+$sudo modinfo -w > modinfo-w.txt
 $sudo svcs -xv > failed_services.txt
 $sudo locale > locale_root.txt
 locale > locale_user.txt            # Never with `sudo`
