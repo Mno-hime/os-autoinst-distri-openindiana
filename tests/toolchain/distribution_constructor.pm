@@ -53,6 +53,10 @@ sub run() {
     type_string "df -h > /dev/$testapi::serialdev\n";
 }
 
+sub test_flags() {
+    return {fatal => 1};
+}
+
 1;
 
 # vim: set sw=4 et:
