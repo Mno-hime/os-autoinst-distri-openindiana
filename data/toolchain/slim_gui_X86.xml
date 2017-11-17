@@ -274,6 +274,7 @@
 			<pkg name="pkg:/system/install/gui-install"/>
 			<pkg name="pkg:/system/install/text-install"/>
 			<pkg name="pkg:/system/install/media/internal"/>
+			<pkg name="pkg:/driver/storage/nvme"/>
 		</packages>
 <!--
      Items below this line are rarely configured
