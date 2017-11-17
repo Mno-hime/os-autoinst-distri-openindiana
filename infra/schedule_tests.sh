@@ -5,7 +5,7 @@ set -o errexit
 
 build="$1"
 shift
-if [[ "$*" = 'dcbuild' ]]; then
+if [[ "$*" =~ 'dcbuild' ]]; then
     dcbuild="$1"
     shift
 else
@@ -24,7 +24,7 @@ client='/usr/share/openqa/script/client'
 asset_root=/var/lib/openqa/share/factory
 products=0
 if [[ "${dcbuild}" ]]; then
-    $client isos post hdd=openindiana-hipster-x86_64-${build}-Server@64bit.qcow2 DISTRI=openindiana-dcbuild VERSION=hipster FLAVOR=dcbuild ARCH=x86_64 BUILD=$build && ((++products))
+    $client isos post hdd=openindiana-hipster-x86_64-${build}-Server@64bit.qcow2 DISTRI=openindiana-dcbuild VERSION=hipster FLAVOR=dcbuild ARCH=x86_64 BUILD=$build $filter && ((++products))
 else
     for medium in iso usb; do
         for flavor in $flavors; do
