@@ -15,6 +15,45 @@
                     },
                     {
                       group_name => "openindiana",
+                      machine => { name => "vbox64_scsi_LSILogic" },
+                      prio => 50,
+                      product => {
+                        arch    => "x86_64",
+                        distri  => "openindiana",
+                        flavor  => "Live",
+                        group   => "openindiana-hipster-Live",
+                        version => "hipster",
+                      },
+                      test_suite => { name => "installation_mate_efi" },
+                    },
+                    {
+                      group_name => "openindiana",
+                      machine => { name => "vbox64_usb_ehci" },
+                      prio => 50,
+                      product => {
+                        arch    => "x86_64",
+                        distri  => "openindiana",
+                        flavor  => "Minimal",
+                        group   => "openindiana-hipster-Minimal",
+                        version => "hipster",
+                      },
+                      test_suite => { name => "installation_textmode" },
+                    },
+                    {
+                      group_name => "openindiana",
+                      machine => { name => "vbox64_usb_xhci" },
+                      prio => 50,
+                      product => {
+                        arch    => "x86_64",
+                        distri  => "openindiana",
+                        flavor  => "Minimal",
+                        group   => "openindiana-hipster-Minimal",
+                        version => "hipster",
+                      },
+                      test_suite => { name => "installation_textmode" },
+                    },
+                    {
+                      group_name => "openindiana",
                       machine => { name => "64bit" },
                       prio => 50,
                       product => {
@@ -301,32 +340,6 @@
                     },
                     {
                       group_name => "openindiana",
-                      machine => { name => "vbox64_ide_ich6" },
-                      prio => 50,
-                      product => {
-                        arch    => "x86_64",
-                        distri  => "openindiana",
-                        flavor  => "Server",
-                        group   => "openindiana-hipster-Server",
-                        version => "hipster",
-                      },
-                      test_suite => { name => "installation_textmode" },
-                    },
-                    {
-                      group_name => "openindiana",
-                      machine => { name => "vbox64_ide_ich6" },
-                      prio => 50,
-                      product => {
-                        arch    => "x86_64",
-                        distri  => "openindiana",
-                        flavor  => "Minimal",
-                        group   => "openindiana-hipster-Minimal",
-                        version => "hipster",
-                      },
-                      test_suite => { name => "installation_textmode" },
-                    },
-                    {
-                      group_name => "openindiana",
                       machine => { name => "vbox64_ide_piix3" },
                       prio => 50,
                       product => {
@@ -337,71 +350,6 @@
                         version => "hipster",
                       },
                       test_suite => { name => "installation_textmode_mbr" },
-                    },
-                    {
-                      group_name => "openindiana",
-                      machine => { name => "vbox64_ide_ich6" },
-                      prio => 50,
-                      product => {
-                        arch    => "x86_64",
-                        distri  => "openindiana",
-                        flavor  => "Live",
-                        group   => "openindiana-hipster-Live",
-                        version => "hipster",
-                      },
-                      test_suite => { name => "installation_mate_efi" },
-                    },
-                    {
-                      group_name => "openindiana",
-                      machine => { name => "vbox64_ide_piix3" },
-                      prio => 50,
-                      product => {
-                        arch    => "x86_64",
-                        distri  => "openindiana",
-                        flavor  => "Live",
-                        group   => "openindiana-hipster-Live",
-                        version => "hipster",
-                      },
-                      test_suite => { name => "installation_mate_textinstaller" },
-                    },
-                    {
-                      group_name => "openindiana",
-                      machine => { name => "xen-hvm" },
-                      prio => 50,
-                      product => {
-                        arch    => "x86_64",
-                        distri  => "openindiana",
-                        flavor  => "Live",
-                        group   => "openindiana-hipster-Live",
-                        version => "hipster",
-                      },
-                      test_suite => { name => "installation_mate_textinstaller" },
-                    },
-                    {
-                      group_name => "openindiana",
-                      machine => { name => "vbox64_ide_piix4" },
-                      prio => 50,
-                      product => {
-                        arch    => "x86_64",
-                        distri  => "openindiana",
-                        flavor  => "Minimal",
-                        group   => "openindiana-hipster-Minimal",
-                        version => "hipster",
-                      },
-                      test_suite => { name => "installation_textmode_mbr" },
-                    },
-                    {
-                      group_name => "openindiana",
-                      machine => { name => "vbox64_usb_ehci" },
-                      prio => 50,
-                      product => {
-                        arch    => "x86_64",
-                        distri  => "openindiana",
-                        flavor  => "Live",
-                        group   => "openindiana-hipster-Live",
-                        version => "hipster",
-                      },
-                      test_suite => { name => "installation_mate_efi" },
                     },
                     {
                       group_name => "openindiana",
@@ -415,32 +363,6 @@
                         version => "hipster",
                       },
                       test_suite => { name => "installation_mate" },
-                    },
-                    {
-                      group_name => "openindiana",
-                      machine => { name => "vbox64_usb_ehci" },
-                      prio => 50,
-                      product => {
-                        arch    => "x86_64",
-                        distri  => "openindiana",
-                        flavor  => "Minimal",
-                        group   => "openindiana-hipster-Minimal",
-                        version => "hipster",
-                      },
-                      test_suite => { name => "installation_textmode_mirror" },
-                    },
-                    {
-                      group_name => "openindiana",
-                      machine => { name => "vbox64_usb_ehci" },
-                      prio => 50,
-                      product => {
-                        arch    => "x86_64",
-                        distri  => "openindiana",
-                        flavor  => "Server",
-                        group   => "openindiana-hipster-Server",
-                        version => "hipster",
-                      },
-                      test_suite => { name => "installation_textmode_raidz" },
                     },
                     {
                       group_name => "openindiana",
@@ -506,32 +428,6 @@
                         version => "hipster",
                       },
                       test_suite => { name => "distribution_constructor_mate" },
-                    },
-                    {
-                      group_name => "openindiana",
-                      machine => { name => "64bit-nestedvnc" },
-                      prio => 50,
-                      product => {
-                        arch    => "x86_64",
-                        distri  => "openindiana",
-                        flavor  => "Server",
-                        group   => "openindiana-hipster-Server",
-                        version => "hipster",
-                      },
-                      test_suite => { name => "virtualization_textmode" },
-                    },
-                    {
-                      group_name => "openindiana",
-                      machine => { name => "64bit-nestedvnc" },
-                      prio => 50,
-                      product => {
-                        arch    => "x86_64",
-                        distri  => "openindiana",
-                        flavor  => "Server",
-                        group   => "openindiana-hipster-Server",
-                        version => "hipster",
-                      },
-                      test_suite => { name => "create_textmode_hdd" },
                     },
                     {
                       group_name => "openindiana",
@@ -626,6 +522,19 @@
                     },
                     {
                       group_name => "openindiana",
+                      machine => { name => "vbox64_sata_82545EM" },
+                      prio => 50,
+                      product => {
+                        arch    => "x86_64",
+                        distri  => "openindiana",
+                        flavor  => "Live",
+                        group   => "openindiana-hipster-Live",
+                        version => "hipster",
+                      },
+                      test_suite => { name => "ssh_in_installer" },
+                    },
+                    {
+                      group_name => "openindiana",
                       machine => { name => "64bit" },
                       prio => 50,
                       product => {
@@ -649,32 +558,6 @@
                         version => "hipster",
                       },
                       test_suite => { name => "upgrade_mate_20161030" },
-                    },
-                    {
-                      group_name => "openindiana",
-                      machine => { name => "vbox64_sata_82540EM" },
-                      prio => 50,
-                      product => {
-                        arch    => "x86_64",
-                        distri  => "openindiana",
-                        flavor  => "Live",
-                        group   => "openindiana-hipster-Live",
-                        version => "hipster",
-                      },
-                      test_suite => { name => "create_mate_hdd" },
-                    },
-                    {
-                      group_name => "openindiana",
-                      machine => { name => "vbox64_sata_82545EM" },
-                      prio => 50,
-                      product => {
-                        arch    => "x86_64",
-                        distri  => "openindiana",
-                        flavor  => "Minimal",
-                        group   => "openindiana-hipster-Minimal",
-                        version => "hipster",
-                      },
-                      test_suite => { name => "create_textmode_hdd" },
                     },
                     {
                       group_name => "openindiana",
@@ -717,6 +600,32 @@
                     },
                     {
                       group_name => "openindiana",
+                      machine => { name => "64bit-qxl" },
+                      prio => 50,
+                      product => {
+                        arch    => "x86_64",
+                        distri  => "openindiana",
+                        flavor  => "Live",
+                        group   => "openindiana-hipster-Live",
+                        version => "hipster",
+                      },
+                      test_suite => { name => "installation_mate" },
+                    },
+                    {
+                      group_name => "openindiana",
+                      machine => { name => "64bit" },
+                      prio => 50,
+                      product => {
+                        arch    => "x86_64",
+                        distri  => "openindiana",
+                        flavor  => "Minimal",
+                        group   => "openindiana-hipster-Minimal",
+                        version => "hipster",
+                      },
+                      test_suite => { name => "virtualization_textmode" },
+                    },
+                    {
+                      group_name => "openindiana",
                       machine => { name => "64bit" },
                       prio => 50,
                       product => {
@@ -756,20 +665,20 @@
                     },
                     {
                       group_name => "openindiana",
-                      machine => { name => "vbox64_sata_82545EM" },
+                      machine => { name => "vbox64_ide_ich6" },
                       prio => 50,
                       product => {
                         arch    => "x86_64",
                         distri  => "openindiana",
-                        flavor  => "Server",
-                        group   => "openindiana-hipster-Server",
+                        flavor  => "Minimal",
+                        group   => "openindiana-hipster-Minimal",
                         version => "hipster",
                       },
-                      test_suite => { name => "create_textmode_hdd" },
+                      test_suite => { name => "installation_textmode_mbr" },
                     },
                     {
                       group_name => "openindiana",
-                      machine => { name => "vbox64_sata_82543GC" },
+                      machine => { name => "xen-hvm" },
                       prio => 50,
                       product => {
                         arch    => "x86_64",
@@ -778,7 +687,7 @@
                         group   => "openindiana-hipster-Live",
                         version => "hipster",
                       },
-                      test_suite => { name => "ssh_in_installer" },
+                      test_suite => { name => "installation_mate" },
                     },
                     {
                       group_name => "openindiana",
@@ -795,6 +704,26 @@
                     },
                   ],
   Machines     => [
+                    {
+                      backend => "svirt",
+                      name => "xen-hvm-qxl",
+                      settings => [
+                        { key => "QEMUVGA", value => "qxl" },
+                        { key => "VIRSH_VMM_FAMILY", value => "xen" },
+                        { key => "VIRSH_VMM_TYPE", value => "hvm" },
+                        { key => "WORKER_CLASS", value => "xen_x86_64" },
+                      ],
+                    },
+                    {
+                      backend => "qemu",
+                      name => "64bit-qxl",
+                      settings => [
+                        { key => "CDMODEL", value => "ide-cd" },
+                        { key => "QEMUCPU", value => "host" },
+                        { key => "QEMUVGA", value => "qxl" },
+                        { key => "WORKER_CLASS", value => "qemu_x86_64" },
+                      ],
+                    },
                     {
                       backend => "qemu",
                       name => "64bit",
@@ -834,84 +763,12 @@
                     },
                     {
                       backend => "qemu",
-                      name => "32bit",
-                      settings => [
-                        { key => "CDMODEL", value => "ide-cd" },
-                        { key => "QEMUCPU", value => "kvm32" },
-                        { key => "WORKER_CLASS", value => "qemu_x86_64" },
-                      ],
-                    },
-                    {
-                      backend => "svirt",
-                      name => "xen-hvm-qxlvga",
-                      settings => [
-                        { key => "QEMUVGA", value => "qxl" },
-                        { key => "VIRSH_VMM_FAMILY", value => "xen" },
-                        { key => "VIRSH_VMM_TYPE", value => "hvm" },
-                        { key => "WORKER_CLASS", value => "xen_x86_64" },
-                      ],
-                    },
-                    {
-                      backend => "qemu",
-                      name => "64bit-qxlvga",
-                      settings => [
-                        { key => "CDMODEL", value => "ide-cd" },
-                        { key => "QEMUCPU", value => "host" },
-                        { key => "QEMUVGA", value => "qxl" },
-                        { key => "WORKER_CLASS", value => "xen_x86_64" },
-                      ],
-                    },
-                    {
-                      backend => "qemu",
                       name => "64bit-uefi",
                       settings => [
                         { key => "CDMODEL", value => "ide-cd" },
                         { key => "QEMUCPU", value => "host" },
                         { key => "UEFI", value => 1 },
                         { key => "UEFI_PFLASH", value => 1 },
-                        { key => "WORKER_CLASS", value => "qemu_x86_64" },
-                      ],
-                    },
-                    {
-                      backend => "qemu",
-                      name => "32bit-uefi",
-                      settings => [
-                        { key => "CDMODEL", value => "scsi-cd" },
-                        { key => "QEMUCPU", value => "kvm32" },
-                        { key => "SCSICONTROLLER", value => "virtio-scsi-pci" },
-                        { key => "UEFI", value => 1 },
-                        { key => "UEFI_BIOS", value => "ovmf-ia32.bin" },
-                        { key => "UEFI_PFLASH", value => 1 },
-                        { key => "WORKER_CLASS", value => "qemu_x86_64" },
-                      ],
-                    },
-                    {
-                      backend => "qemu",
-                      name => "32bit-stdvga",
-                      settings => [
-                        { key => "CDMODEL", value => "ide-cd" },
-                        { key => "QEMUCPU", value => "kvm32" },
-                        { key => "QEMUVGA", value => "std" },
-                        { key => "WORKER_CLASS", value => "qemu_x86_64" },
-                      ],
-                    },
-                    {
-                      backend => "qemu",
-                      name => "USBboot_32",
-                      settings => [
-                        { key => "CDMODEL", value => "ide-cd" },
-                        { key => "QEMUCPU", value => "kvm32" },
-                        { key => "USBBOOT", value => 1 },
-                        { key => "WORKER_CLASS", value => "qemu_x86_64" },
-                      ],
-                    },
-                    {
-                      backend => "qemu",
-                      name => "USBboot_64",
-                      settings => [
-                        { key => "CDMODEL", value => "ide-cd" },
-                        { key => "QEMUCPU", value => "kvm64" },
-                        { key => "USBBOOT", value => 1 },
                         { key => "WORKER_CLASS", value => "qemu_x86_64" },
                       ],
                     },
@@ -923,17 +780,6 @@
                         { key => "VBOXHDDTYPE", value => "sata" },
                         { key => "VBOXNICTYPE", value => "82540EM" },
                         { key => "VBOXOSTYPE", value => "Solaris11_64" },
-                        { key => "VIRSH_VMM_FAMILY", value => "virtualbox" },
-                        { key => "WORKER_CLASS", value => "vbox_x86_64" },
-                      ],
-                    },
-                    {
-                      backend => "svirt",
-                      name => "vbox32_sata",
-                      settings => [
-                        { key => "VBOXHDDMODEL", value => "IntelAHCI" },
-                        { key => "VBOXHDDTYPE", value => "sata" },
-                        { key => "VBOXOSTYPE", value => "OpenSolaris" },
                         { key => "VIRSH_VMM_FAMILY", value => "virtualbox" },
                         { key => "WORKER_CLASS", value => "vbox_x86_64" },
                       ],
@@ -995,61 +841,6 @@
                     },
                     {
                       backend => "svirt",
-                      name => "vbox32_ide_ich6",
-                      settings => [
-                        { key => "VBOXHDDMODEL", value => "ICH6" },
-                        { key => "VBOXHDDTYPE", value => "ide" },
-                        { key => "VBOXOSTYPE", value => "OpenSolaris" },
-                        { key => "VIRSH_VMM_FAMILY", value => "virtualbox" },
-                        { key => "WORKER_CLASS", value => "vbox_x86_64" },
-                      ],
-                    },
-                    {
-                      backend => "svirt",
-                      name => "vbox32_sas_LSILogicSAS",
-                      settings => [
-                        { key => "VBOXHDDMODEL", value => "LSILogicSAS" },
-                        { key => "VBOXHDDTYPE", value => "sas" },
-                        { key => "VBOXOSTYPE", value => "OpenSolaris" },
-                        { key => "VIRSH_VMM_FAMILY", value => "virtualbox" },
-                        { key => "WORKER_CLASS", value => "vbox_x86_64" },
-                      ],
-                    },
-                    {
-                      backend => "svirt",
-                      name => "vbox32_scsi_LSILogic",
-                      settings => [
-                        { key => "VBOXHDDMODEL", value => "LSILogic" },
-                        { key => "VBOXHDDTYPE", value => "scsi" },
-                        { key => "VBOXOSTYPE", value => "OpenSolaris" },
-                        { key => "VIRSH_VMM_FAMILY", value => "virtualbox" },
-                        { key => "WORKER_CLASS", value => "vbox_x86_64" },
-                      ],
-                    },
-                    {
-                      backend => "svirt",
-                      name => "vbox32_ide_piix4",
-                      settings => [
-                        { key => "VBOXHDDMODEL", value => "PIIX4" },
-                        { key => "VBOXHDDTYPE", value => "ide" },
-                        { key => "VBOXOSTYPE", value => "OpenSolaris" },
-                        { key => "VIRSH_VMM_FAMILY", value => "virtualbox" },
-                        { key => "WORKER_CLASS", value => "vbox_x86_64" },
-                      ],
-                    },
-                    {
-                      backend => "svirt",
-                      name => "vbox32_ide_piix3",
-                      settings => [
-                        { key => "VBOXHDDMODEL", value => "PIIX3" },
-                        { key => "VBOXHDDTYPE", value => "ide" },
-                        { key => "VBOXOSTYPE", value => "OpenSolaris" },
-                        { key => "VIRSH_VMM_FAMILY", value => "virtualbox" },
-                        { key => "WORKER_CLASS", value => "vbox_x86_64" },
-                      ],
-                    },
-                    {
-                      backend => "svirt",
                       name => "vbox64_usb_xhci",
                       settings => [
                         { key => "INSTALLONLY", value => 1 },
@@ -1079,6 +870,7 @@
                       backend => "svirt",
                       name => "vbox64_pcie_nvme",
                       settings => [
+                        { key => "INSTALLONLY", value => 1 },
                         { key => "VBOXHDDMODEL", value => "sata" },
                         { key => "VBOXHDDMODEL2", value => "NVMe" },
                         { key => "VBOXHDDTYPE2", value => "pcie" },
