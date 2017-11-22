@@ -108,7 +108,7 @@ sub pre_bootmenu_setup {
         assert_screen 'sea-bios-splash', 5;
         send_key 'esc';
         assert_screen 'boot-menu-usb', 4;
-        send_key(2 + get_var('NUMDISKS'));
+        send_key(2 + get_var('NUMDISKS') + get_var('QEMU_NO_FDC_SET', 0));
     }
 }
 
