@@ -130,7 +130,8 @@ sub run() {
         }
 
         # Installation from USB (EHCI-only currently) is really slow
-        assert_screen 'installation-finished', (get_var('USBBOOT') || check_var('VBOXHDDTYPE2', 'usb')) ? 3000 : 1200;
+        my $timeout = (get_var('USBBOOT') || check_var('VBOXHDDTYPE2', 'usb')) ? 3000 : 1200;
+        assert_screen 'installation-finished', $timeout;
         # List thru installation log
         send_key_until_needlematch('select-installation-log', 'tab');
         send_key 'ret';
