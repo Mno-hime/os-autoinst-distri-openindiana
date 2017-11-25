@@ -1,9 +1,8 @@
 # openQA tests for OpenIndiana
 
+openQA dashboard: https://openqa.oi.mnowak.cz/.
 
-Watch the tests running: https://openqa.oi.mnowak.cz.
-
-Complete openQA documentation is at http://open.qa.
+Complete openQA documentation is at http://open.qa/.
 
 Setup your [local openQA instance](https://github.com/os-autoinst/openQA/blob/master/docs/Installing.asciidoc).
 
@@ -12,29 +11,36 @@ Setup your [local openQA instance](https://github.com/os-autoinst/openQA/blob/ma
 ### Fork following repositories on GitHub
 
 ```
-https://github.com/Mno-hime/os-autoinst-distri-openindiana
-https://github.com/Mno-hime/os-autoinst 
-https://github.com/Mno-hime/os-autoinst-needles-openindiana
+https://github.com/OpenIndiana/os-autoinst-distri-openindiana
+https://github.com/OpenIndiana/os-autoinst
+https://github.com/OpenIndiana/os-autoinst-needles-openindiana
 ```
 
 ### Clone your forks locally
 
 ```
-git clone git@github.com:$YOU/os-autoinst-distri-openindiana.git
-git clone git@github.com:$YOU/os-autoinst.git os-autoinst-distri-openindiana/os-autoinst/
-git clone git@github.com:$YOU/os-autoinst-needles-openindiana.git os-autoinst-distri-openindiana/products/openindiana/needles/
-chmod 0777 os-autoinst-distri-openindiana/products/openindiana/needles/
+YOU="Mno-hime"           # your GitHub handle
+git clone git@github.com:${YOU}/os-autoinst-distri-openindiana.git
+git clone git@github.com:${YOU}/os-autoinst.git os-autoinst-distri-openindiana/os-autoinst/
+git clone git@github.com:${YOU}/os-autoinst-needles-openindiana.git os-autoinst-distri-openindiana/products/openindiana/needles/
+# Make sure 'geekotest' user and your login user can access the needles directory
+chown geekotest os-autoinst-distri-openindiana/products/openindiana/needles/
 cd os-autoinst-distri-openindiana/
 ```
 
 ### Prepare your environment
 
+Install necessary Perl libraries locally:
 ```
 cpanm --local-lib=~/perl5 local::lib && eval $(perl -I ~/perl5/lib/perl5/ -Mlocal::lib)
+```
+
+Setup the project:
+```
 make prepare
 ```
 
-Create new branch, do changes, test them in your local openQA instance, run `make test` to verify, that the changes are valid and conform to coding style, and finally create a Pull Request on GitHub.
+Create new branch, do changes, test them in your local openQA instance, run `make test` to verify that the changes are valid and conform to coding style, and finally create a Pull Request on GitHub.
 
 Providing Pull Request means you agree with license of this project, which is to be found in each respective file. Some of the tests are derived from [openSUSE openQA tests](https://github.com/os-autoinst/os-autoinst-distri-opensuse), hence the SUSE LLC copyright.
 
