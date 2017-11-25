@@ -21,9 +21,9 @@ sub check_ssh_in_live_environment {
     assert_script_run('pgrep -l sshd');
     my $the_illumos_project = 'The Illumos Project';
     type_string qq(cat > sshlogin.exp <<-END
-spawn ssh -o "StrictHostKeyChecking no" $testapi::live_user_name\@localhost
+spawn ssh -o "StrictHostKeyChecking no" $main_common::live_user_name\@localhost
 expect "assword:"
-send "$testapi::live_user_password\\r"
+send "$main_common::live_user_password\\r"
 expect "$the_illumos_project"
 END\n);
     assert_script_run "expect -f sshlogin.exp | grep --color=always '$the_illumos_project'";
