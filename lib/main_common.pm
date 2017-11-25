@@ -10,16 +10,31 @@
 package main_common;
 use base Exporter;
 use Exporter;
-use testapi qw(check_var get_var set_var diag);
+use testapi;
 use autotest;
 use strict;
 use warnings;
 
 our @EXPORT = qw(
+  $live_user_name
+  $live_user_password
+  $live_root_password
   init_main
   loadtest
   set_defaults_for_username_and_password
 );
+
+# Live medium's credentials
+our $live_user_name     = 'jack';
+our $live_user_password = 'jack';
+our $live_root_password = 'openindiana';
+
+sub set_defaults_for_username_and_password {
+    # Installed system's credentials
+    $testapi::username = 'robot';
+    $testapi::password = 'nots3cr3t';
+    $testapi::realname = 'Karel Capek';
+}
 
 sub init_main {
     set_defaults_for_username_and_password();
@@ -28,18 +43,6 @@ sub init_main {
 sub loadtest {
     my ($test) = @_;
     autotest::loadtest("tests/$test.pm");
-}
-
-sub set_defaults_for_username_and_password {
-    # Installed system's credentials
-    $testapi::username = 'robot';
-    $testapi::password = 'nots3cr3t';
-    $testapi::realname = 'Karel Capek';
-
-    # Live medium's credentials
-    $testapi::live_user_name     = 'jack';
-    $testapi::live_user_password = 'jack';
-    $testapi::live_root_password = 'openindiana';
 }
 
 1;
