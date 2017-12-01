@@ -13,6 +13,7 @@
 use base 'consoletest';
 use strict;
 use testapi;
+use utils 'pkg_call';
 
 sub run {
     select_console 'user-console';
@@ -24,6 +25,12 @@ sub run {
         # VirtualBox version we run on host
         my $vboxver = '5.1.30';
         assert_script_run 'wget -O VBoxGuestAdditions.iso ' . data_url("vagrant/VBoxGuestAdditions_$vboxver.iso");
+        # On Minimal installation 'diagnostic/constype' is missing and
+        # Guest Additions installation criples boot archive.
+        if (check_var('FLAVOR', 'Minimal')) {
+            record_soft_failure 'We need "diagnostic/constype" otherwise is boot archive crippled';
+            pkg_call('install diagnostic/constype', sudo => 1);
+        }
     }
     # Configure guest management tools, environment for `vagrant up`, & cleanup
     for my $script ('vmtools', 'vagrant', 'cleanup') {
