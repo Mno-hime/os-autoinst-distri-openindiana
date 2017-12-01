@@ -23,7 +23,7 @@ sub run {
     sleep 2;
     type_string "vagrant box remove -f -a openindiana_hipster_test\n";
     sleep 5;
-    my $vagrant_name           = get_required_var('PUBLISH_HDD_1');
+    my $vagrant_name = get_required_var('PUBLISH_HDD_1');
     type_string "vagrant box add --name openindiana_hipster_test $vagrant_name\n";
     assert_screen "vagrant-box-add", 600;
     type_string "vagrant box list -i\n";
