@@ -66,15 +66,15 @@ sub load_featuretests {
     }
 }
 
-my $vmm_family = get_var('VIRSH_VMM_FAMILY');
-my $desktop    = get_required_var('DESKTOP');
-my $brf        = get_var('BOOTLOADER_REGRESSION_FEATURE');
+my $desktop = get_required_var('DESKTOP');
+my $brf     = get_var('BOOTLOADER_REGRESSION_FEATURE');
 
+my $vmm_family = get_var('VIRSH_VMM_FAMILY');
+loadtest "installation/bootloader_$vmm_family" if $vmm_family;
 if (get_var('HDD_1')) {
     loadtest 'boot/boot_from_hdd';
 }
 else {
-    loadtest "installation/bootloader_$vmm_family" if $vmm_family;
     if ($brf) {
         loadtest "regressions/$brf";
         return 1;
@@ -85,7 +85,10 @@ else {
     loadtest 'installation/zpool_rpool_setup';
 }
 load_featuretests;
+loadtest 'virtualization/create_vagrant_box' if check_var('VAGRANT_BOX', 'create');
 loadtest 'shutdown/shutdown';
+loadtest 'shutdown/svirt_upload_assets' if get_var('PUBLISH_HDD_1');
+loadtest 'virtualization/test_vagrant_box' if check_var('VAGRANT_BOX', 'create');
 
 1;
 # vim: set sw=4 et:

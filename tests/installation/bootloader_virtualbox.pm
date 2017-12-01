@@ -1,6 +1,7 @@
 # OpenIndiana's openQA tests
 #
 # Copyright © 2017 SUSE LLC
+# Copyright © 2017 Michal Nowak
 #
 # Copying and distribution of this file, with or without modification,
 # are permitted in any medium without royalty provided the copyright
@@ -35,7 +36,7 @@ sub run() {
     my $name  = $svirt->name;
 
     my $vbm     = 'VBoxManage ';
-    my $homedir = get_required_var('CACHEDIRECTORY');
+    my $homedir = '/var/lib/libvirt/images';
 
     $svirt->run_cmd("$vbm setproperty machinefolder '${homedir}'");
     $svirt->run_cmd("$vbm controlvm $name poweroff");
@@ -75,13 +76,17 @@ sub run() {
     my $numdisks = get_var('NUMDISKS');
     for my $port (1 .. $numdisks) {
         my $hddname = "${homedir}/${name}_${port}";
-        $svirt->run_cmd("$vbm createhd --filename $hddname --size " . 1024 * get_var('HDDSIZEGB'));
+        my $diffparent;
+        my $hddsize = '--size ' . 1024 * get_var('HDDSIZEGB', 10);
+        if (my $hddx = get_var("HDD_$port")) {
+            $diffparent = "--diffparent $hddx";
+            $hddsize    = '';
+        }
+        $svirt->run_cmd("$vbm createmedium disk $diffparent --filename $hddname $hddsize");
         $svirt->run_cmd("$vbm storageattach $name --storagectl $storage_2nd --port $port --device 0 "
               . "--type hdd --medium ${hddname}.vdi --nonrotational on --discard on");
     }
     $svirt->run_cmd("$vbm startvm $name --type headless");
-    $svirt->run_cmd("netstat -tulpn | grep " . get_var('VIRTUALBOX_SERIAL_PORT'));
-    $svirt->run_cmd("netstat -tulpn | grep $instance");
     save_screenshot;
 
     # Connect to serial port
