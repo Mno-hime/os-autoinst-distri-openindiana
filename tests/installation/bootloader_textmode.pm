@@ -40,9 +40,6 @@ sub run() {
     assert_screen 'vt-installation';
 
     # Upload various logs
-    assert_script_run "iostat > /dev/$testapi::serialdev";
-    wait_idle;
-    assert_script_run "iostat > /dev/$testapi::serialdev";
     unless (check_var('VIRSH_VMM_FAMILY', 'xen')) {
         upload_logs('/tmp/install_log');
         system_log_gathering(nosudo => 1);
