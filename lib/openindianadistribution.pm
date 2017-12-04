@@ -117,20 +117,16 @@ sub activate_console {
 
     my $myconsole = $console;
     $console =~ m/^(\w+)-(console)/;
-    my ($name, $user, $type) = ($1, $1, $2);
-    $name = $user //= '';
+    my ($user, $type) = ($1, $2);
+    $user //= '';
     $type //= '';
-    if ($name) {
-        $user = $testapi::username;
-    }
 
     if ($type eq 'console') {
-        my $nr = 4;
-        assert_screen("console$nr-selected");
+        assert_screen("console4-selected");
         type_string "$testapi::username\n";
         handle_password_prompt;
         assert_screen "text-logged-in-user";
-        $self->set_standard_prompt($testapi::username);
+        $self->set_standard_prompt($user);
     }
     elsif ($myconsole eq 'svirt') {
         wait_still_screen;
