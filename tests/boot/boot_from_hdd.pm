@@ -20,7 +20,7 @@ sub run() {
 }
 
 sub test_flags() {
-    return {fatal => 1, milestone => 1};
+    return {fatal => 1, milestone => get_var('PUBLISH_HDD_1') ? 0 : 1};
 }
 
 1;
