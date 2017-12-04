@@ -368,7 +368,7 @@ sub assert_shutdown_and_restore_system {
     $action //= 'reboot';
     my $vnc_console = 'sut';
     console($vnc_console)->disable_vnc_stalls;
-    assert_shutdown(90);
+    sleep(90);
     if ($action eq 'reboot') {
         reset_consoles;
         console('svirt')->define_and_start;

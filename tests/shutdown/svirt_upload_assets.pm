@@ -40,7 +40,7 @@ sub extract_assets {
     elsif (check_var('VIRSH_VMM_FAMILY', 'virtualbox')) {
         if (check_var('VAGRANT_BOX', 'create')) {
             $name =~ s/\.([[:alnum:]]+)$//;
-            type_string "rm -fv metadata.json Vagrantfile box.ovf box-disk002.vmdk\n";
+            type_string "rm -rfv metadata.json Vagrantfile box.ovf box-disk00*.vmdk libvirtroot_default_* \n";
             sleep 3;
             my $i = get_required_var('VIRSH_INSTANCE');
             type_string "MAC=\$(VBoxManage showvminfo openQA-SUT-$i | grep 'NIC 1:' | awk '{ print \$4 }' | tr -d '\\n,')\n";
@@ -60,19 +60,21 @@ end" > Vagrantfile';
             type_string "VBoxManage export openQA-SUT-$i -o box.ovf\n";
             assert_screen('svirt-asset-upload-hdd-image-exported', 1000);
             $name .= '.box';
-            type_string "GZIP=-9 nice ionice tar cvvfz $name Vagrantfile metadata.json box.ovf box-disk002.vmdk && echo BOX-CREATION-OK\n";
+            type_string "GZIP=-9 nice ionice tar cvvfz $name Vagrantfile metadata.json box.ovf box-disk00*.vmdk && echo BOX-CREATION-OK\n";
             assert_screen('svirt-asset-upload-hdd-image-gzipped', 1000);
-            type_string "rm -fv metadata.json Vagrantfile box.ovf box-disk002.vmdk\n";
+            type_string "rm -fv metadata.json box.ovf box-disk00*.vmdk\n";
         }
         else {
-            type_string "DISK_UUID=\$(VBoxManage showmediuminfo disk $svirt_img_name | grep 'Child UUIDs' | awk '{ print \$3 }' | tr -d '\\n')\n";
+            type_string("VBoxManage closemedium disk $name --delete\n");
+            sleep 5;
+            type_string "DISK_UUID=\$(VBoxManage showmediuminfo disk $svirt_img_name | grep -w ^UUID | awk '{ print \$2 }' | tr -d '\\n')\n";
             type_string "echo \$DISK_UUID\n";
             type_string "nice ionice VBoxManage clonemedium disk \$DISK_UUID $name && echo OK\n";
             assert_screen('svirt-asset-upload-hdd-image-converted', 600);
         }
     }
     else {
-        die 'Unsupported hypervizor wrt uploading?';
+        die 'Unsupported hypervizor when it comes to uploading?';
     }
 
     # Upload the image as a private asset; do the upload verification
@@ -81,11 +83,33 @@ end" > Vagrantfile';
     assert_screen('svirt-asset-upload-hdd-image-uploaded', 1000);
 }
 
+sub vbox_cmd {
+    my ($cmd, $args) = @_;
+    $args->{can_fail} ||= 0;
+    my $ret       = console('svirt')->run_cmd($cmd);
+    my $cmd_strip = $cmd;
+    diag "VBoxManage command '$cmd_strip' returned: $ret";
+    die "\n\nVBoxManage command:\n\n\t$cmd_strip\n\nfailed" unless ($args->{can_fail} || !$ret);
+    return $ret;
+}
+
 sub run {
     # connect to VIRSH_HOSTNAME screen and upload asset from there
     my $svirt = select_console('svirt');
 
-    # mark hard disks for upload if test finished
+    my $name = $svirt->name;
+    # Vagrant Box-specific changes
+    if (check_var('VIRSH_VMM_FAMILY', 'virtualbox')) {
+        my $storage = uc get_required_var('VBOXHDDTYPE');
+        # Detach installation medium, which we don't need anymore
+        vbox_cmd("VBoxManage storageattach $name --storagectl $storage --port 0 --device 0 --type dvddrive --medium emptydrive");
+        if (check_var('VAGRANT_BOX', 'create')) {
+            # Remove openQA specifics
+            vbox_cmd("VBoxManage modifyvm $name --uart1 off --uartmode1 disconnected --boot2 none --vrde off");
+        }
+    }
+
+    # Upload hard disks if test finished
     my @toextract;
     my $first_hdd = get_var('S390_ZKVM') ? 'a' : 'b';
     for my $i (1 .. get_var('NUMDISKS')) {

@@ -17,8 +17,10 @@ use utils qw(power_action system_log_gathering);
 
 sub run() {
     select_console 'user-console';
-    system_log_gathering;
+    # On Vagrant boxes user 'robot' is by now gone.
+    system_log_gathering unless check_var('VAGRANT_BOX', 'create');
     select_console 'x11' if check_var('DESKTOP', 'mate');
+    assert_script_sudo "/usr/sbin/userdel $testapi::username";
     power_action('poweroff');
 }
 

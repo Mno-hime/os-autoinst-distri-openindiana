@@ -25,15 +25,14 @@ sub run {
         # VirtualBox version we run on host
         my $vboxver = '5.1.30';
         assert_script_run 'wget -O VBoxGuestAdditions.iso ' . data_url("vagrant/VBoxGuestAdditions_$vboxver.iso");
-        # On Minimal installation 'diagnostic/constype' is missing and
-        # Guest Additions installation criples boot archive.
+        # On Minimal installation 'diagnostic/constype' is missing
         if (check_var('FLAVOR', 'Minimal')) {
-            record_soft_failure 'We need "diagnostic/constype" otherwise is boot archive crippled';
-            pkg_call('install diagnostic/constype', sudo => 1);
+            record_soft_failure '"diagnostic/constype" is missing';
+            pkg_call('install -v diagnostic/constype', sudo => 1);
         }
     }
     # Configure guest management tools, environment for `vagrant up`, & cleanup
-    for my $script ('vmtools', 'vagrant', 'cleanup') {
+    for my $script ('vmtools', 'vagrant', 'cleanup', 'openqa_cleanup') {
         assert_script_run 'wget ' . data_url("vagrant/$script.sh");
         assert_script_run "chmod +x $script.sh";
         assert_script_sudo "-E ./$script.sh";
