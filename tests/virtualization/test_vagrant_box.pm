@@ -14,6 +14,11 @@ use base 'consoletest';
 use strict;
 use testapi;
 
+sub cleanup_vagrant {
+    type_string "vagrant halt; vagrant destroy -f; vagrant box remove -f -a openindiana_hipster_test\n";
+    wait_still_screen(stilltime => 10);
+}
+
 sub run {
     select_console 'svirt';
 
@@ -21,8 +26,8 @@ sub run {
     type_string("clear\n");
     type_string "pushd $image_storage\n";
     sleep 2;
-    type_string "vagrant box remove -f -a openindiana_hipster_test\n";
-    sleep 5;
+    cleanup_vagrant;
+    type_string "rm -fv Vagrantfile\n";
     my $vagrant_name = get_required_var('PUBLISH_HDD_1');
     type_string "vagrant box add --name openindiana_hipster_test $vagrant_name\n";
     assert_screen "vagrant-box-add", 600;
@@ -44,6 +49,10 @@ sub run {
     assert_screen "vagrant-destroy";
     type_string "vagrant box remove -f -a openindiana_hipster_test\n";
     sleep 5;
+}
+
+sub post_fail_hook {
+    cleanup_vagrant;
 }
 
 sub test_flags() {
