@@ -19,8 +19,8 @@ sub run() {
     select_console 'user-console';
     # On Vagrant boxes user 'robot' is by now gone.
     system_log_gathering unless check_var('VAGRANT_BOX', 'create');
-    select_console 'x11' if check_var('DESKTOP', 'mate');
-    assert_script_sudo "/usr/sbin/userdel $testapi::username";
+    select_console 'x11'                                      if check_var('DESKTOP',     'mate');
+    assert_script_sudo "/usr/sbin/userdel $testapi::username" if check_var('VAGRANT_BOX', 'create');
     power_action('poweroff');
 }
 
