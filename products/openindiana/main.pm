@@ -87,7 +87,7 @@ else {
 load_featuretests;
 loadtest 'virtualization/create_vagrant_box' if check_var('VAGRANT_BOX', 'create');
 loadtest 'shutdown/shutdown';
-loadtest 'shutdown/svirt_upload_assets' if get_var('PUBLISH_HDD_1');
+loadtest 'shutdown/svirt_upload_assets' if (get_var('PUBLISH_HDD_1') && check_var('BACKEND', 'svirt'));
 loadtest 'virtualization/test_vagrant_box' if check_var('VAGRANT_BOX', 'create');
 
 1;
