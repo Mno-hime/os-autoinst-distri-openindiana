@@ -20,7 +20,7 @@ use utils 'deploy_kvm';
 sub run {
     select_console 'user-console';
 
-    my $image = 'alpine-virt-3.6.2-x86_64.iso';
+    my $image = 'alpine-virt-3.7.0-x86_64.iso';
     deploy_kvm($image);
 
     my $macaddr = '90:b8:d0:c0:ff:ee';
