@@ -26,6 +26,7 @@ sub run {
         assert_screen 'console-login-password';
         type_password;
         send_key 'ret';
+        pkg_set_flush_content_cache if get_var('PUBLISH_HDD_1');
         if (get_var('FLAVOR', '') =~ /Minimal/) {
             # Can't use pkg_call() as we don't have sudo, yet.
             assert_script_run('pkg install sudo wget', 700);
@@ -70,6 +71,7 @@ sub run {
     type_string "clear\n";
     assert_screen('cleared-console');
 
+    pkg_set_flush_content_cache if get_var('PUBLISH_HDD_1');
     # Enable Virtual Terminals 2..6
     enable_vt;
     # Enable console mirroring to first serial console
