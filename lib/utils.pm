@@ -32,6 +32,7 @@ our @EXPORT = qw(
   assert_mate
   wait_boot
   disable_fastreboot
+  pkg_set_flush_content_cache
   enable_vt
   activate_root_account
   pkg_call
@@ -284,6 +285,19 @@ sub disable_fastreboot {
     assert_script_sudo '/usr/sbin/svccfg -s system/boot-config:default setprop config/fastreboot_default=false';
     assert_script_sudo '/usr/sbin/svcadm refresh svc:/system/boot-config:default';
     assert_script_sudo 'svcprop -p config/fastreboot_default svc:/system/boot-config:default';
+}
+
+# Clean pkg cache automatically on success.
+sub pkg_set_flush_content_cache {
+    if (check_var('DESKTOP', 'mate')) {
+        assert_script_sudo('pkg property');
+        assert_script_sudo('pkg set-property flush-content-cache-on-success True');
+    }
+    else {
+        # Expected to be run in root environment.
+        assert_script_run('pkg property');
+        assert_script_run('pkg set-property flush-content-cache-on-success True');
+    }
 }
 
 sub enable_vt {
