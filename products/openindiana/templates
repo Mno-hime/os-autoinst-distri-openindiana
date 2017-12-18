@@ -1435,7 +1435,7 @@
                           key => "HDD_1",
                           value => "%DISTRI%-%VERSION%-%ARCH%-%BUILD%-%FLAVOR%\@%MACHINE%.vdi",
                         },
-                        { key => "PUBLISH_HDD_1", value => "OI-hipster-20171122-vagrant.box" },
+                        { key => "PUBLISH_HDD_1", value => "OI-hipster-%BUILD%-vagrant.box" },
                         { key => "START_AFTER_TEST", value => "create_textmode_hdd" },
                         { key => "VAGRANT_BOX", value => "create" },
                       ],

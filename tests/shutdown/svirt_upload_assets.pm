@@ -74,7 +74,7 @@ end" > Vagrantfile';
         }
     }
     else {
-        die 'Unsupported hypervizor when it comes to uploading?';
+        die 'Unsupported hypervizor wrt uploading?';
     }
 
     # Upload the image as a private asset; do the upload verification
