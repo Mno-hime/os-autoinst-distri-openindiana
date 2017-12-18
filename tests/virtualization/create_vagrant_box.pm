@@ -25,11 +25,6 @@ sub run {
         # VirtualBox version we run on host
         my $vboxver = '5.1.30';
         assert_script_run 'wget -O VBoxGuestAdditions.iso ' . data_url("vagrant/VBoxGuestAdditions_$vboxver.iso");
-        # On Minimal installation 'diagnostic/constype' is missing
-        if (check_var('FLAVOR', 'Minimal')) {
-            record_soft_failure '"diagnostic/constype" is missing';
-            pkg_call('install -v diagnostic/constype', sudo => 1);
-        }
     }
     # Configure guest management tools, environment for `vagrant up`, & cleanup
     for my $script ('vmtools', 'vagrant', 'cleanup', 'openqa_cleanup') {

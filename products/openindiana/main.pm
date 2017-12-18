@@ -63,6 +63,9 @@ sub load_featuretests {
         if (exists $features{consoletests}) {
             load_consoletests;
         }
+        if (exists $features{vbox_guest_additions}) {
+            loadtest 'console/test_vbox_guest_additions';
+        }
     }
 }
 
