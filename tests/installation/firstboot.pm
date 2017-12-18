@@ -71,7 +71,7 @@ sub run {
     type_string "clear\n";
     assert_screen('cleared-console');
 
-    pkg_set_flush_content_cache if get_var('PUBLISH_HDD_1');
+    pkg_set_flush_content_cache if get_var('PUBLISH_HDD_1') && check_var('DESKTOP', 'mate');
     # Enable Virtual Terminals 2..6
     enable_vt;
     # Enable console mirroring to first serial console
