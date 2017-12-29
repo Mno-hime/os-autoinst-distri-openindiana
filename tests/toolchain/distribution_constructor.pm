@@ -18,42 +18,44 @@ use testapi;
 use utils 'pkg_call';
 use Time::Piece;
 
-sub run() {
+sub run {
     select_console 'user-console';
+
     pkg_call('install distribution-constructor wget', sudo => 1);
 
     my $snapdate = localtime->strftime('%Y%m%d');
     my $variant  = get_required_var('DC_VARIANT');
-    my $name     = "slim_${variant}_X86.xml";
-    assert_script_run 'wget ' . data_url("toolchain/$name");
+    my $name     = "OpenIndiana_${variant}_X86.xml";
+    assert_script_run 'wget ' . data_url("distribution_constructor/$name");
 
     # Build image
     assert_script_sudo("distro_const build $name", 9000);
 
     # Upload logs from construction
-    my $dc_root = "/rpool/dc";
-    assert_script_run "cp `ls -t ${dc_root}/logs/simple-log-* | head -n1` simple-log-$variant.txt";
-    assert_script_run "cp `ls -t ${dc_root}/logs/detail-log-* | head -n1` detail-log-$variant.txt";
-    upload_logs "simple-log-$variant.txt";
-    upload_logs "detail-log-$variant.txt";
+    my $dc_root = '/rpool/dc';
+    for my $log_type ('simple', 'detail') {
+        my $log_type_txt = "$log_type-log-$variant.txt";
+        assert_script_run "cp `ls -t $dc_root/logs/$log_type-log-* | head -n1` $log_type_txt";
+        upload_logs $log_type_txt;
+    }
 
     # Upload constructed ISO and USB media as public assets
-    script_run "ls -lh ${dc_root}/media/";
+    assert_script_run "ls -lh $dc_root/media/";
     for my $medium ('iso', 'usb') {
         my $upload_filename      = "OI-hipster-$variant-$snapdate.$medium";
-        my $upload_filename_path = "${dc_root}/media/$upload_filename";
-        assert_script_sudo "mv ${dc_root}/media/OpenIndiana_${variant}_X86.$medium $upload_filename_path";
+        my $upload_filename_path = "$dc_root/media/$upload_filename";
+        assert_script_sudo "mv $dc_root/media/OpenIndiana_${variant}_X86.$medium $upload_filename_path";
         for (1 .. 5) {    # Try to upload image up to five times
-            last unless (upload_asset("$upload_filename_path", 1, 0, 300));
+            last unless upload_asset($upload_filename_path, 1, 0, 300);
         }
         record_info("$variant$medium", "$upload_filename uploaded successfully");
         # Save some space on openQA worker as OS image takes 40-45 GB
         assert_script_sudo "rm -f $upload_filename_path";
     }
-    type_string "df -h > /dev/$testapi::serialdev\n";
+    script_run "df -h > /dev/$testapi::serialdev", 0;
 }
 
-sub test_flags() {
+sub test_flags {
     return {fatal => 1};
 }
 

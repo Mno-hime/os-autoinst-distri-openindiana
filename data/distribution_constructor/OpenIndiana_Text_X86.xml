@@ -24,7 +24,7 @@
     Text Mode Installer iso and usb image
 -->
 
-<distribution name="OpenIndiana_minimal_X86">
+<distribution name="OpenIndiana_Text_X86">
 	<distro_constr_params>
 		<!--
 		     Where to build. This can be a zfs dataset or a mountpoint.
@@ -192,9 +192,9 @@
 		-->
 		<pkg_repo_default_authority>
 			<main
-				url="http://pkg.openindiana.org/hipster"/>
-			<!--
+				url="http://pkg.openindiana.org/hipster/"
 				authname="openindiana.org"/>
+			<!--
 			     If you want to use one or more  mirrors that are
 			     setup for the authority, specify the urls here.
 			-->
@@ -229,7 +229,7 @@
 		-->
 		<post_install_repo_default_authority>
 			<main
-				url="http://pkg.openindiana.org/hipster"
+				url="http://pkg.openindiana.org/hipster/"
 				authname="openindiana.org"/>
 			<!--
 			     Uncomment before using.
@@ -257,7 +257,7 @@
 			    <pkg name="pkg:/entire@0.5.11-0.build#/>
 			-->
 			<pkg name="pkg:/entire"/>
-			<pkg name="pkg:/minimal_install"/>
+			<pkg name="pkg:/server_install"/>
 			<pkg name="pkg:/system/install/text-install"/>
 			<pkg name="pkg:/system/install/media/internal"/>
 		</packages>
@@ -271,7 +271,7 @@
 		    installed system.
 		--> 
 		<post_install_remove_packages>
-			<pkg name="pkg:/minimal_install"/>
+			<pkg name="pkg:/server_install"/>
 		</post_install_remove_packages>
 		<!--
 		     If/how to compress the live image.
@@ -280,7 +280,7 @@
 		-->
 		<live_img_compression type="lzma"/>
 		<!--
-		     Loader menu modifications
+		     Loader menu modifications.
 		-->
 		<loader_menu_modifications>
 			<timeout>10</timeout>
