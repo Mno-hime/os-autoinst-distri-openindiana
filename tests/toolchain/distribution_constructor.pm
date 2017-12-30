@@ -23,9 +23,10 @@ sub run {
 
     pkg_call('install distribution-constructor wget', sudo => 1);
 
-    my $snapdate = localtime->strftime('%Y%m%d');
-    my $variant  = get_required_var('DC_VARIANT');
-    my $name     = "OpenIndiana_${variant}_X86.xml";
+    my $snapdate      = localtime->strftime('%Y%m%d');
+    my $variant       = get_required_var('DC_OS_VARIANT');
+    my $media_variant = get_required_var('DC_MEDIA_VARIANT');
+    my $name          = "OpenIndiana_${variant}_X86.xml";
     assert_script_run 'wget ' . data_url("distribution_constructor/$name");
 
     # Build image
@@ -42,7 +43,7 @@ sub run {
     # Upload constructed ISO and USB media as public assets
     assert_script_run "ls -lh $dc_root/media/";
     for my $medium ('iso', 'usb') {
-        my $upload_filename      = "OI-hipster-$variant-$snapdate.$medium";
+        my $upload_filename      = "OI-hipster-$media_variant-$snapdate.$medium";
         my $upload_filename_path = "$dc_root/media/$upload_filename";
         assert_script_sudo "mv $dc_root/media/OpenIndiana_${variant}_X86.$medium $upload_filename_path";
         for (1 .. 5) {    # Try to upload image up to five times
