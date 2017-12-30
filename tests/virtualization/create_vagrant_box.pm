@@ -23,7 +23,7 @@ sub run {
 
     if (check_var('VIRSH_VMM_FAMILY', 'virtualbox')) {
         # VirtualBox version we run on host
-        my $vboxver = '5.1.30';
+        my $vboxver = '5.2.4';
         assert_script_run 'wget -O VBoxGuestAdditions.iso ' . data_url("vagrant/VBoxGuestAdditions_$vboxver.iso");
     }
     # Configure guest management tools, environment for `vagrant up`, & cleanup

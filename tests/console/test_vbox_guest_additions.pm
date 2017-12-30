@@ -26,7 +26,7 @@ sub run {
     select_console 'user-console';
 
     # VirtualBox version we run on the host
-    my $vboxver = '5.1.30';
+    my $vboxver = '5.2.4';
     assert_script_run 'wget -O VBoxGuestAdditions.iso ' . data_url("vagrant/VBoxGuestAdditions_$vboxver.iso");
     # Configure guest management tools. $PACKER_BUILDER_TYPE is required by
     # the Vagrant 'vmtools' shell script.
