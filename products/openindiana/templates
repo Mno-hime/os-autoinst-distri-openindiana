@@ -1273,7 +1273,8 @@
                       name => "distribution_constructor_minimal",
                       settings => [
                         { key => "BOOTFROM", value => "c" },
-                        { key => "DC_VARIANT", value => "Minimal" },
+                        { key => "DC_MEDIA_VARIANT", value => "minimal" },
+                        { key => "DC_OS_VARIANT", value => "Minimal" },
                         { key => "DESKTOP", value => "textmode" },
                         { key => "FEATURES", value => "distribution_constructor" },
                         {
@@ -1287,7 +1288,8 @@
                       name => "distribution_constructor_server",
                       settings => [
                         { key => "BOOTFROM", value => "c" },
-                        { key => "DC_VARIANT", value => "Text" },
+                        { key => "DC_MEDIA_VARIANT", value => "text" },
+                        { key => "DC_OS_VARIANT", value => "Text" },
                         { key => "DESKTOP", value => "textmode" },
                         { key => "FEATURES", value => "distribution_constructor" },
                         {
@@ -1301,7 +1303,8 @@
                       name => "distribution_constructor_mate",
                       settings => [
                         { key => "BOOTFROM", value => "c" },
-                        { key => "DC_VARIANT", value => "Live" },
+                        { key => "DC_MEDIA_VARIANT", value => "gui" },
+                        { key => "DC_OS_VARIANT", value => "Live" },
                         { key => "DESKTOP", value => "textmode" },
                         { key => "FEATURES", value => "distribution_constructor" },
                         {
