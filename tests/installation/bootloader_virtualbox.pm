@@ -89,7 +89,7 @@ sub run() {
         my $hddname = "${homedir}/${name}_${port}";
         vbox_cmd("VBoxManage closemedium disk $hddname.vdi --delete", {can_fail => 1});
         vbox_cmd("rm -fv $hddname.vdi");
-        my $diffparent;
+        my $diffparent = '';
         my $hddsize = '--size ' . 1024 * get_var('HDDSIZEGB', 10);
         if (my $hddx = get_var("HDD_$port")) {
             $diffparent = "--diffparent $hddx";
