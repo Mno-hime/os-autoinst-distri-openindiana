@@ -1,6 +1,6 @@
 # OpenIndiana's openQA tests
 #
-# Copyright © 2017 Michal Nowak
+# Copyright © 2017-2018 Michal Nowak
 #
 # Copying and distribution of this file, with or without modification,
 # are permitted in any medium without royalty provided the copyright
@@ -21,8 +21,8 @@ sub run() {
     pkg_call('install gnupg', sudo => 1);    # gpg2 binary
 
     # Copy and paste the lines below to install the 64-bit set.
-    assert_script_run 'BOOTSTRAP_TAR="bootstrap-2017Q3-x86_64.tar.gz"';
-    assert_script_run 'BOOTSTRAP_SHA="10bb81b100e03791a976fb61f15f7ff95cad4930"';
+    assert_script_run 'BOOTSTRAP_TAR="bootstrap-2017Q4-x86_64.tar.gz"';
+    assert_script_run 'BOOTSTRAP_SHA="9ef5fcbe4e579dfb80171e68a99c4c342ad78e55"';
 
     # Download the bootstrap kit to the current directory.
     assert_script_run 'curl -O https://pkgsrc.joyent.com/packages/SmartOS/bootstrap/${BOOTSTRAP_TAR}';
