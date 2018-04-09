@@ -2,7 +2,7 @@
 #
 # Copyright © 2009-2013 Bernhard M. Wiedemann
 # Copyright © 2012-2017 SUSE LLC
-# Copyright © 2017 Michal Nowak
+# Copyright © 2017-2018 Michal Nowak
 #
 # Copying and distribution of this file, with or without modification,
 # are permitted in any medium without royalty provided the copyright
@@ -74,6 +74,7 @@ my $brf     = get_var('BOOTLOADER_REGRESSION_FEATURE');
 
 my $vmm_family = get_var('VIRSH_VMM_FAMILY');
 loadtest "installation/bootloader_$vmm_family" if $vmm_family;
+loadtest 'boot/disable_uefi_secure_boot' if get_var('UEFI');
 if (get_var('HDD_1')) {
     loadtest 'boot/boot_from_hdd';
 }

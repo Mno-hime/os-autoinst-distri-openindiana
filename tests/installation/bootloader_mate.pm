@@ -33,7 +33,8 @@ END\n);
 sub run() {
     pre_bootmenu_setup;
     bootloader_dvd;
-    firstboot_setup;
+    # On UEFI illumos vga console is currently not initialized
+    firstboot_setup unless get_var('UEFI');
     # LightDM login is not present on Live medium
     assert_mate;
     mouse_hide;
