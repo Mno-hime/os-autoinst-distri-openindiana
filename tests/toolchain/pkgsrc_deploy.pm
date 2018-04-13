@@ -21,8 +21,8 @@ sub run() {
     pkg_call('install gnupg', sudo => 1);    # gpg2 binary
 
     # Copy and paste the lines below to install the 64-bit set.
-    assert_script_run 'BOOTSTRAP_TAR="bootstrap-2017Q4-x86_64.tar.gz"';
-    assert_script_run 'BOOTSTRAP_SHA="9ef5fcbe4e579dfb80171e68a99c4c342ad78e55"';
+    assert_script_run 'BOOTSTRAP_TAR="bootstrap-2018Q1-x86_64.tar.gz"';
+    assert_script_run 'BOOTSTRAP_SHA="77c52b15dc0cf7438ad41031f2aeb7cc5007ae1c"';
 
     # Download the bootstrap kit to the current directory.
     assert_script_run 'curl -O https://pkgsrc.joyent.com/packages/SmartOS/bootstrap/${BOOTSTRAP_TAR}';
@@ -41,6 +41,10 @@ sub run() {
     # Add to PATH/MANPATH.
     assert_script_run 'PATH=/opt/local/sbin:/opt/local/bin:$PATH';
     assert_script_run 'MANPATH=/opt/local/man:$MANPATH';
+}
+
+sub test_flags() {
+    return {fatal => 1, milestone => 1};
 }
 
 1;
