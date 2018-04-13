@@ -43,4 +43,8 @@ sub run() {
     assert_script_run 'MANPATH=/opt/local/man:$MANPATH';
 }
 
+sub test_flags() {
+    return {fatal => 1, milestone => 1};
+}
+
 1;
