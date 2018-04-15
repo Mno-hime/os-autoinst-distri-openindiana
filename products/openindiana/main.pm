@@ -45,7 +45,6 @@ sub load_featuretests {
     if (%features) {
         if (exists $features{update}) {
             loadtest 'update/pkg_update_to_latest_packages';
-            load_consoletests;
         }
         if (exists $features{toolchain}) {
             loadtest 'toolchain/pkgsrc_deploy';

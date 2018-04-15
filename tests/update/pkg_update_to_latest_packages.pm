@@ -39,13 +39,13 @@ sub run() {
     # OpenIndiana 2017.10, or use the workaround below.
     #
     # For the discussion in full, see:
-    #   * https://www.illumos.org/issues/8142
-    #   * https://www.illumos.org/issues/8685
+    #   * https://www.illumos.org/issues/8142 (commited on 2017-05-03)
+    #   * https://www.illumos.org/issues/8685 (commited on 2018-01-25)
     #   * https://illumos.topicbox.com/groups/developer/T441d169a85277364-Md5eecf7b8e4e78766030cfe2
     #   * https://illumos.topicbox.com/groups/developer/Tbd6485b901b93374-M2c975c580ad03866bfaf188e
-    my ($base_build) = get_required_var('TEST') =~ /(\d+)/;
-    if ($base_build < 20171031) {
-        record_soft_failure("We upgrade OpenIndiana from build $base_build, so a workaround is needed.");
+    my $base_build = get_var('BASE_BUILD', get_required_var('BUILD'));
+    if ($base_build < 20170503) {
+        record_soft_failure("Updating OpenIndiana from build '$base_build' to latest code requires `bootadm` workaround");
         assert_script_sudo('beadm list');
         assert_script_sudo('beadm mount -v openindiana-1 /mnt');
         assert_script_sudo('/mnt/sbin/bootadm update-archive -R /mnt');

@@ -2,46 +2,7 @@
   JobTemplates => [
                     {
                       group_name => "openindiana",
-                      machine => { name => "vbox64_pcie_nvme" },
-                      prio => 50,
-                      product => {
-                        arch    => "x86_64",
-                        distri  => "openindiana",
-                        flavor  => "Server",
-                        group   => "openindiana-hipster-Server",
-                        version => "hipster",
-                      },
-                      test_suite => { name => "installation_textmode_raidz" },
-                    },
-                    {
-                      group_name => "openindiana",
-                      machine => { name => "vbox64_scsi_LSILogic" },
-                      prio => 50,
-                      product => {
-                        arch    => "x86_64",
-                        distri  => "openindiana",
-                        flavor  => "Live",
-                        group   => "openindiana-hipster-Live",
-                        version => "hipster",
-                      },
-                      test_suite => { name => "installation_mate_efi" },
-                    },
-                    {
-                      group_name => "openindiana",
                       machine => { name => "vbox64_usb_ehci" },
-                      prio => 50,
-                      product => {
-                        arch    => "x86_64",
-                        distri  => "openindiana",
-                        flavor  => "Minimal",
-                        group   => "openindiana-hipster-Minimal",
-                        version => "hipster",
-                      },
-                      test_suite => { name => "installation_textmode" },
-                    },
-                    {
-                      group_name => "openindiana",
-                      machine => { name => "vbox64_usb_xhci" },
                       prio => 50,
                       product => {
                         arch    => "x86_64",
@@ -90,6 +51,45 @@
                         version => "hipster",
                       },
                       test_suite => { name => "vbox_guest_additions_mate" },
+                    },
+                    {
+                      group_name => "openindiana",
+                      machine => { name => "uefi" },
+                      prio => 50,
+                      product => {
+                        arch    => "x86_64",
+                        distri  => "openindiana",
+                        flavor  => "Live",
+                        group   => "openindiana-hipster-Live",
+                        version => "hipster",
+                      },
+                      test_suite => { name => "ssh_in_installer" },
+                    },
+                    {
+                      group_name => "openindiana-development",
+                      machine => { name => "uefi" },
+                      prio => 50,
+                      product => {
+                        arch    => "x86_64",
+                        distri  => "openindiana",
+                        flavor  => "Server",
+                        group   => "openindiana-hipster-Server",
+                        version => "hipster",
+                      },
+                      test_suite => { name => "installation_textmode" },
+                    },
+                    {
+                      group_name => "openindiana",
+                      machine => { name => "vbox64_pcie_nvme" },
+                      prio => 50,
+                      product => {
+                        arch    => "x86_64",
+                        distri  => "openindiana",
+                        flavor  => "Server",
+                        group   => "openindiana-hipster-Server",
+                        version => "hipster",
+                      },
+                      test_suite => { name => "installation_textmode_raidz" },
                     },
                     {
                       group_name => "openindiana",
@@ -379,32 +379,6 @@
                     },
                     {
                       group_name => "openindiana",
-                      machine => { name => "vbox64_ide_piix3" },
-                      prio => 50,
-                      product => {
-                        arch    => "x86_64",
-                        distri  => "openindiana",
-                        flavor  => "Server",
-                        group   => "openindiana-hipster-Server",
-                        version => "hipster",
-                      },
-                      test_suite => { name => "installation_textmode_mbr" },
-                    },
-                    {
-                      group_name => "openindiana",
-                      machine => { name => "vbox64_ide_piix4" },
-                      prio => 50,
-                      product => {
-                        arch    => "x86_64",
-                        distri  => "openindiana",
-                        flavor  => "Live",
-                        group   => "openindiana-hipster-Live",
-                        version => "hipster",
-                      },
-                      test_suite => { name => "installation_mate" },
-                    },
-                    {
-                      group_name => "openindiana",
                       machine => { name => "xen-hvm" },
                       prio => 50,
                       product => {
@@ -573,6 +547,19 @@
                       test_suite => { name => "create_textmode_hdd" },
                     },
                     {
+                      group_name => "openindiana-development",
+                      machine => { name => "vbox64_sata_virtio" },
+                      prio => 50,
+                      product => {
+                        arch    => "x86_64",
+                        distri  => "openindiana",
+                        flavor  => "Server",
+                        group   => "openindiana-hipster-Server",
+                        version => "hipster",
+                      },
+                      test_suite => { name => "installation_textmode" },
+                    },
+                    {
                       group_name => "openindiana",
                       machine => { name => "64bit" },
                       prio => 50,
@@ -610,19 +597,6 @@
                         version => "hipster",
                       },
                       test_suite => { name => "installation_textmode_mirror" },
-                    },
-                    {
-                      group_name => "openindiana",
-                      machine => { name => "vbox64_sata_virtio" },
-                      prio => 50,
-                      product => {
-                        arch    => "x86_64",
-                        distri  => "openindiana",
-                        flavor  => "Server",
-                        group   => "openindiana-hipster-Server",
-                        version => "hipster",
-                      },
-                      test_suite => { name => "installation_textmode_mbr" },
                     },
                     {
                       group_name => "openindiana",
@@ -690,6 +664,19 @@
                       test_suite => { name => "vbox_guest_additions_textmode" },
                     },
                     {
+                      group_name => "openindiana-development",
+                      machine => { name => "vbox64_usb_xhci" },
+                      prio => 50,
+                      product => {
+                        arch    => "x86_64",
+                        distri  => "openindiana",
+                        flavor  => "Server",
+                        group   => "openindiana-hipster-Server",
+                        version => "hipster",
+                      },
+                      test_suite => { name => "installation_textmode" },
+                    },
+                    {
                       group_name => "openindiana",
                       machine => { name => "64bit" },
                       prio => 50,
@@ -727,19 +714,6 @@
                         version => "hipster",
                       },
                       test_suite => { name => "installation_textmode_raidz" },
-                    },
-                    {
-                      group_name => "openindiana",
-                      machine => { name => "vbox64_ide_ich6" },
-                      prio => 50,
-                      product => {
-                        arch    => "x86_64",
-                        distri  => "openindiana",
-                        flavor  => "Minimal",
-                        group   => "openindiana-hipster-Minimal",
-                        version => "hipster",
-                      },
-                      test_suite => { name => "installation_textmode_mbr" },
                     },
                     {
                       group_name => "openindiana",
@@ -791,6 +765,17 @@
                     },
                     {
                       backend => "qemu",
+                      name => "uefi",
+                      settings => [
+                        { key => "CDMODEL", value => "ide-cd" },
+                        { key => "QEMUCPU", value => "host" },
+                        { key => "UEFI", value => 1 },
+                        { key => "UEFI_PFLASH", value => 1 },
+                        { key => "WORKER_CLASS", value => "qemu_x86_64" },
+                      ],
+                    },
+                    {
+                      backend => "qemu",
                       name => "64bit",
                       settings => [
                         { key => "CDMODEL", value => "ide-cd" },
@@ -824,17 +809,6 @@
                         { key => "VIRSH_VMM_FAMILY", value => "xen" },
                         { key => "VIRSH_VMM_TYPE", value => "hvm" },
                         { key => "WORKER_CLASS", value => "xen_x86_64" },
-                      ],
-                    },
-                    {
-                      backend => "qemu",
-                      name => "64bit-uefi",
-                      settings => [
-                        { key => "CDMODEL", value => "ide-cd" },
-                        { key => "QEMUCPU", value => "host" },
-                        { key => "UEFI", value => 1 },
-                        { key => "UEFI_PFLASH", value => 1 },
-                        { key => "WORKER_CLASS", value => "qemu_x86_64" },
                       ],
                     },
                     {
@@ -928,7 +902,6 @@
                       name => "vbox64_pcie_nvme",
                       settings => [
                         { key => "INSTALLONLY", value => 1 },
-                        { key => "VBOXHDDMODEL", value => "sata" },
                         { key => "VBOXHDDMODEL2", value => "NVMe" },
                         { key => "VBOXHDDTYPE2", value => "pcie" },
                         { key => "VIRSH_VMM_FAMILY", value => "virtualbox" },
@@ -1137,7 +1110,7 @@
                       settings => [
                         { key => "BOOTFROM", value => "c" },
                         { key => "DESKTOP", value => "mate" },
-                        { key => "FEATURES", value => "update" },
+                        { key => "FEATURES", value => "update,consoletests" },
                         {
                           key => "HDD_1",
                           value => "%DISTRI%-%VERSION%-%ARCH%-%BUILD%-%FLAVOR%\@%MACHINE%.qcow2",
@@ -1164,7 +1137,7 @@
                       settings => [
                         { key => "BOOTFROM", value => "c" },
                         { key => "DESKTOP", value => "textmode" },
-                        { key => "FEATURES", value => "update" },
+                        { key => "FEATURES", value => "update,consoletests" },
                         {
                           key => "HDD_1",
                           value => "%DISTRI%-%VERSION%-%ARCH%-%BUILD%-%FLAVOR%\@%MACHINE%.qcow2",
@@ -1276,7 +1249,7 @@
                         { key => "DC_MEDIA_VARIANT", value => "minimal" },
                         { key => "DC_OS_VARIANT", value => "Minimal" },
                         { key => "DESKTOP", value => "textmode" },
-                        { key => "FEATURES", value => "distribution_constructor" },
+                        { key => "FEATURES", value => "update,distribution_constructor" },
                         {
                           key => "HDD_1",
                           value => "openindiana-hipster-%ARCH%-%BUILD%-Server\@%MACHINE%.qcow2",
@@ -1291,7 +1264,7 @@
                         { key => "DC_MEDIA_VARIANT", value => "text" },
                         { key => "DC_OS_VARIANT", value => "Text" },
                         { key => "DESKTOP", value => "textmode" },
-                        { key => "FEATURES", value => "distribution_constructor" },
+                        { key => "FEATURES", value => "update,distribution_constructor" },
                         {
                           key => "HDD_1",
                           value => "openindiana-hipster-%ARCH%-%BUILD%-Server\@%MACHINE%.qcow2",
@@ -1306,7 +1279,7 @@
                         { key => "DC_MEDIA_VARIANT", value => "gui" },
                         { key => "DC_OS_VARIANT", value => "Live" },
                         { key => "DESKTOP", value => "textmode" },
-                        { key => "FEATURES", value => "distribution_constructor" },
+                        { key => "FEATURES", value => "update,distribution_constructor" },
                         {
                           key => "HDD_1",
                           value => "openindiana-hipster-%ARCH%-%BUILD%-Server\@%MACHINE%.qcow2",
@@ -1319,9 +1292,10 @@
                       description => "Update installed 2017.04 Live system to latest packages in oi/hipster branch.",
                       name => "upgrade_mate_20170502",
                       settings => [
+                        { key => "BASE_BUILD", value => 20170502 },
                         { key => "BOOTFROM", value => "c" },
                         { key => "DESKTOP", value => "mate" },
-                        { key => "FEATURES", value => "update" },
+                        { key => "FEATURES", value => "update,consoletests" },
                         {
                           key => "HDD_1",
                           value => "%DISTRI%-%VERSION%-%ARCH%-20170502-%FLAVOR%\@%MACHINE%.qcow2",
@@ -1333,9 +1307,10 @@
                       description => "Update installed 2017.04 Server/Minimal system to latest packages in oi/hipster branch.",
                       name => "upgrade_textmode_20170502",
                       settings => [
+                        { key => "BASE_BUILD", value => 20170502 },
                         { key => "BOOTFROM", value => "c" },
                         { key => "DESKTOP", value => "textmode" },
-                        { key => "FEATURES", value => "update" },
+                        { key => "FEATURES", value => "update,consoletests" },
                         {
                           key => "HDD_1",
                           value => "%DISTRI%-%VERSION%-%ARCH%-20170502-%FLAVOR%\@%MACHINE%.qcow2",
@@ -1347,9 +1322,10 @@
                       description => "Update installed 2016.10 Server/Minimal system to latest packages in oi/hipster branch.",
                       name => "upgrade_textmode_20161030",
                       settings => [
+                        { key => "BASE_BUILD", value => 20161030 },
                         { key => "BOOTFROM", value => "c" },
                         { key => "DESKTOP", value => "textmode" },
-                        { key => "FEATURES", value => "update" },
+                        { key => "FEATURES", value => "update,consoletests" },
                         {
                           key => "HDD_1",
                           value => "%DISTRI%-%VERSION%-%ARCH%-20161030-%FLAVOR%\@%MACHINE%.qcow2",
@@ -1361,9 +1337,10 @@
                       description => "Update installed 2017.10 Live system to latest packages in oi/hipster branch.",
                       name => "upgrade_mate_20171031",
                       settings => [
+                        { key => "BASE_BUILD", value => 20171031 },
                         { key => "BOOTFROM", value => "c" },
                         { key => "DESKTOP", value => "mate" },
-                        { key => "FEATURES", value => "update" },
+                        { key => "FEATURES", value => "update,consoletests" },
                         {
                           key => "HDD_1",
                           value => "%DISTRI%-%VERSION%-%ARCH%-20171031-%FLAVOR%\@%MACHINE%.qcow2",
@@ -1375,26 +1352,13 @@
                       description => "Update installed 2017.10 Server/Minimal system to latest packages in oi/hipster branch.",
                       name => "upgrade_textmode_20171031",
                       settings => [
+                        { key => "BASE_BUILD", value => 20171031 },
                         { key => "BOOTFROM", value => "c" },
                         { key => "DESKTOP", value => "textmode" },
-                        { key => "FEATURES", value => "update" },
+                        { key => "FEATURES", value => "update,consoletests" },
                         {
                           key => "HDD_1",
                           value => "%DISTRI%-%VERSION%-%ARCH%-20171031-%FLAVOR%\@%MACHINE%.qcow2",
-                        },
-                        { key => "QEMURAM", value => 3072 },
-                      ],
-                    },
-                    {
-                      description => "Update installed 2016.10 Live system to latest packages in oi/hipster branch.\n\nNote: This test suite has to run with QEMUVGA=std (that is with the variable directly or on MACHINE=64bit-std), because cirrus driver in 2016.10 is broken.",
-                      name => "upgrade_mate_20161030",
-                      settings => [
-                        { key => "BOOTFROM", value => "c" },
-                        { key => "DESKTOP", value => "mate" },
-                        { key => "FEATURES", value => "update" },
-                        {
-                          key => "HDD_1",
-                          value => "%DISTRI%-%VERSION%-%ARCH%-20161030-%FLAVOR%\@64bit.qcow2",
                         },
                         { key => "QEMURAM", value => 3072 },
                       ],
@@ -1463,6 +1427,21 @@
                         { key => "FEATURES", value => "vbox_guest_additions" },
                         { key => "HDDSIZEGB", value => 50 },
                         { key => "INSTALLER", value => "text" },
+                      ],
+                    },
+                    {
+                      description => "Update installed 2016.10 Live system to latest packages in oi/hipster branch.\n\nNote: This test suite has to run with QEMUVGA=std (that is with the variable directly here or MACHINE set to 64bit-std), because cirrus driver in 2016.10 is broken.",
+                      name => "upgrade_mate_20161030",
+                      settings => [
+                        { key => "BASE_BUILD", value => 20161030 },
+                        { key => "BOOTFROM", value => "c" },
+                        { key => "DESKTOP", value => "mate" },
+                        { key => "FEATURES", value => "update,consoletests" },
+                        {
+                          key => "HDD_1",
+                          value => "%DISTRI%-%VERSION%-%ARCH%-20161030-%FLAVOR%\@64bit.qcow2",
+                        },
+                        { key => "QEMURAM", value => 3072 },
                       ],
                     },
                   ],
