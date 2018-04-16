@@ -1,7 +1,7 @@
 # OpenIndiana's openQA tests
 #
-# Copyright © 2017 Michal Nowak
 # Copyright © 2017 SUSE LLC
+# Copyright © 2017-2018 Michal Nowak
 #
 # Copying and distribution of this file, with or without modification,
 # are permitted in any medium without royalty provided the copyright
@@ -400,7 +400,10 @@ sub power_action {
     my $action = shift;
     my %args   = @_;
     die "'action' was not provided" unless $action;
-    console('sut')->disable_vnc_stalls if check_var('BACKEND', 'svirt');
+    if (check_var('BACKEND', 'svirt')) {
+        console('sut')->disable_vnc_stalls;
+        console('svirt')->stop_serial_grab;
+    }
     if ($action eq 'poweroff') {
         power('acpi');
     }
@@ -428,10 +431,26 @@ sub power_action {
     }
     else {
         my $timeout = 60;
-        diag "Sleep for $timeout seconds";
-        sleep($timeout) if $action eq 'poweroff';
+        if ($action eq 'poweroff') {
+            assert_shutdown($timeout);
+            # This is a dirty workaround to fix Vagrant box generation (mostly).
+            # Should be removed once VirtualBox guest process is able to terminate
+            # on it's OS poweroff. Currently the process is stuck.
+            if (check_var('VIRSH_VMM_FAMILY', 'virtualbox')) {
+                my $vmname = console('svirt')->name;
+                diag "Terminate $vmname process";
+                console('svirt')->run_cmd("pkill -f VBoxHeadless.*$vmname");
+                diag "Kill $vmname process";
+                console('svirt')->run_cmd("pkill -f -9 VBoxHeadless.*$vmname");
+                diag "Poweroff $vmname";
+                console('svirt')->run_cmd("VBoxManage controlvm $vmname poweroff");
+            }
+        }
+        reset_consoles;
+        if (check_var('BACKEND', 'svirt') && $action ne 'poweroff') {
+            console('svirt')->start_serial_grab;
+        }
     }
-    reset_consoles;
 }
 
 1;

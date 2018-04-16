@@ -1,7 +1,7 @@
 # OpenIndiana's openQA tests
 #
 # Copyright © 2017 SUSE LLC
-# Copyright © 2017 Michal Nowak
+# Copyright © 2017-2018 Michal Nowak
 #
 # Copying and distribution of this file, with or without modification,
 # are permitted in any medium without royalty provided the copyright
@@ -70,7 +70,7 @@ sub run() {
     my $usbtype = get_var('VBOXUSBTYPE', '');
     my $audio = '--audiocontroller ac97 --audio ' . (check_var('FLAVOR', 'Live') ? 'pulse' : 'none');
     my $iso = copy_medium_to_cache(basename get_var('ISO'));
-    vbox_cmd("VBoxManage modifyvm $name --ostype Solaris11_64 --boot1 disk --boot2 dvd "
+    vbox_cmd("VBoxManage modifyvm $name --ostype OpenSolaris_64 --boot1 disk --boot2 dvd "
           . "--cpus $qemucpus --longmode on "
           . "--memory $qemuram --pagefusion on "
           . "--vrde on --vrdeproperty VNCPassword=$testapi::password --vrdeaddress '' --vrdeport $instance "
