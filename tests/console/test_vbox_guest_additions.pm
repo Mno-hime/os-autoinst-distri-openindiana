@@ -1,6 +1,6 @@
 # OpenIndiana's openQA tests
 #
-# Copyright © 2017 Michal Nowak
+# Copyright © 2017-2018 Michal Nowak
 #
 # Copying and distribution of this file, with or without modification,
 # are permitted in any medium without royalty provided the copyright
@@ -26,7 +26,7 @@ sub run {
     select_console 'user-console';
 
     # VirtualBox version we run on the host
-    my $vboxver = '5.2.4';
+    my $vboxver = '5.2.8';
     assert_script_run 'wget -O VBoxGuestAdditions.iso ' . data_url("vagrant/VBoxGuestAdditions_$vboxver.iso");
     # Configure guest management tools. $PACKER_BUILDER_TYPE is required by
     # the Vagrant 'vmtools' shell script.
