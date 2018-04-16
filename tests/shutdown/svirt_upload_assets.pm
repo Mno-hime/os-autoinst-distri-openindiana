@@ -1,6 +1,7 @@
 # OpenIndiana's openQA tests
 #
 # Copyright © 2016-2017 SUSE LLC
+# Copyright © 2017-2018 Michal Nowak
 #
 # Copying and distribution of this file, with or without modification,
 # are permitted in any medium without royalty provided the copyright
@@ -103,8 +104,8 @@ sub run {
         my $storage = uc get_required_var('VBOXHDDTYPE');
         # Detach installation medium, which we don't need anymore
         vbox_cmd("VBoxManage storageattach $name --storagectl $storage --port 0 --device 0 --type dvddrive --medium emptydrive");
+        # Remove openQA specifics
         if (check_var('VAGRANT_BOX', 'create')) {
-            # Remove openQA specifics
             vbox_cmd("VBoxManage modifyvm $name --uart1 off --uartmode1 disconnected --boot2 none --vrde off");
         }
     }
@@ -130,6 +131,10 @@ sub run {
         extract_assets($asset);
     }
 }
+
+# Do not run any post-run nor error handling code on the raw host
+sub post_fail_hook { }
+sub post_run_hook  { }
 
 sub test_flags() {
     return {fatal => 1};
