@@ -1,6 +1,6 @@
 # OpenIndiana's openQA tests
 #
-# Copyright © 2017 Michal Nowak
+# Copyright © 2017-2018 Michal Nowak
 #
 # Copying and distribution of this file, with or without modification,
 # are permitted in any medium without royalty provided the copyright
@@ -21,8 +21,11 @@ use utils 'deploy_kvm';
 sub run() {
     select_console 'user-console';
 
+    # Get the image
     my $image = 'firefly_05052016.iso';
-    deploy_kvm($image);
+    assert_script_run 'wget ' . data_url("virtualization/$image");
+
+    deploy_kvm;
 
     my $macaddr = '90:b8:d0:c0:ff:ee';
     script_sudo(
