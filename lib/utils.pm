@@ -355,8 +355,6 @@ sub system_log_gathering {
 }
 
 sub deploy_kvm {
-    my ($image) = @_;
-
     # Install kvm kernel module and QEMU device emulator
     pkg_call('install driver/i86pc/kvm system/qemu/kvm', sudo => 1);
     # Test module load
@@ -364,11 +362,8 @@ sub deploy_kvm {
     assert_script_sudo('modinfo | grep kvm');
     assert_script_sudo('test -c /dev/kvm');
 
-    # Get Alpine Linux virt ISO to test in illumos KVM
-    assert_script_run 'wget ' . data_url("virtualization/$image");
-    my $phys_link = script_output('dladm show-phys -p -o LINK');
-
     # Create virtual NIC 'vnic0' bound to $phys_link link
+    my $phys_link = script_output('dladm show-phys -p -o LINK');
     script_sudo('dladm delete-vnic vnic0');
     assert_script_sudo("dladm create-vnic -l $phys_link vnic0");
 }

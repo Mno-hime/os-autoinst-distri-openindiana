@@ -58,6 +58,7 @@ sub load_featuretests {
         if (exists $features{virtualization}) {
             loadtest 'virtualization/kvm_boot_alpine';
             loadtest 'virtualization/kvm_boot_firefly';
+            loadtest 'virtualization/kvm_boot_dragonfly_bsd';
         }
         if (exists $features{consoletests}) {
             load_consoletests;

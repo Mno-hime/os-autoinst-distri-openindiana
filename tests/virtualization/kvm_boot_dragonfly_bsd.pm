@@ -7,10 +7,9 @@
 # notice and this notice are preserved.  This file is offered as-is,
 # without any warranty.
 
-# Summary: Run Firefly failsafe image in illumos KVM (nested)
+# Summary: Run DragonFly BSD in illumos KVM (nested)
 #   https://github.com/joyent/illumos-kvm-cmd
 #   https://omnios.omniti.com/wiki.php/VirtualMachinesKVM
-#   https://sourceforge.net/projects/fireflyfailsafe/
 # Maintainer: Michal Nowak <mnowak@startmail.com>
 
 use base 'consoletest';
@@ -18,12 +17,13 @@ use strict;
 use testapi;
 use utils 'deploy_kvm';
 
-sub run() {
+sub run {
     select_console 'user-console';
 
     # Get the image
-    my $image = 'firefly_05052016.iso';
-    assert_script_run 'wget ' . data_url("virtualization/$image");
+    my $image = 'dfly-x86_64-5.2.0_REL.iso';
+    assert_script_run("wget http://ftp.halifax.rwth-aachen.de/dragonflybsd/iso-images/${image}.bz2", 300);
+    assert_script_run "bunzip2 -v ${image}.bz2";
 
     deploy_kvm;
 
@@ -35,27 +35,41 @@ sub run() {
           . "-boot d -m 512 -serial /dev/$testapi::serialdev 2>&1 | tee qemu_kvm.log | tee /dev/$testapi::serialdev &",
         0
     );
-    wait_serial('Start bios') || die 'Firefly did not boot';
+    wait_serial('Start bios') || die 'Alpine did not boot';
     select_console 'vnc';
     console('vnc')->disable_vnc_stalls;
 
-    assert_screen('firefly-bootloader');
+    assert_screen('dragonfly-bootloader');
     send_key 'esc';
-    assert_screen('firefly-okprompt');
+    assert_screen('dragonfly-okprompt');
     type_string "boot\n";
-    assert_screen('firefly-uname');
-    assert_screen('firefly-prompt');
+    assert_screen('dragonfly-uname',  90);
+    assert_screen('dragonfly-banner', 90);
+    assert_screen('dragonfly-login');
+    type_string "root\n";
+    assert_screen('dragonfly-prompt');
+    # Now we can use serial line
+    my $host_serialdev = $testapi::serialdev;
+    $testapi::serialdev = 'ttyd0';    # COM1
+    assert_script_run 'uname -a';
+    assert_script_run 'sysctl machdep.spectre_mitigation';
+    assert_script_run 'sysctl machdep.meltdown_mitigation';
+    type_string "exit\n";
+    assert_screen('dragonfly-login');
+    type_string "installer\n";
+    send_key_until_needlematch('dragonfly-installer', 'f10', 10, 5);
+    $testapi::serialdev = $host_serialdev;
 
     select_console 'user-console';
     script_output('kvmstat 1 5 | grep -v "pid vcpu"') || die "'kvmstat' did not produce statistics";
 
     select_console 'vnc';
 
-    assert_script_run 'uname -a';
-    type_string "prtconf > $testapi::serialdev\n";
-    type_string "ifconfig -a > $testapi::serialdev\n";
-    type_string "poweroff\n";
-    wait_still_screen;
+    send_key_until_needlematch('dragonfly-installer-reboot', 'tab');
+    send_key 'ret';
+    assert_screen('dragonfly-installer-reboot-question');
+    send_key 'ret';
+    assert_screen('dragonfly-system-halted', 90);
     select_console 'user-console';
     assert_script_sudo 'kill `pgrep qemu-kvm`';
     upload_logs('qemu_kvm.log');
