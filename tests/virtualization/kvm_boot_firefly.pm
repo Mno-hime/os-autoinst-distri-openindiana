@@ -39,7 +39,7 @@ sub run {
     select_console 'vnc';
     console('vnc')->disable_vnc_stalls;
 
-    assert_screen('firefly-bootloader');
+    assert_screen('firefly-bootloader', 90);
     send_key 'esc';
     assert_screen('firefly-okprompt');
     type_string "boot\n";
