@@ -136,7 +136,7 @@ sub run {
 sub post_fail_hook { }
 sub post_run_hook  { }
 
-sub test_flags() {
+sub test_flags {
     return {fatal => 1};
 }
 

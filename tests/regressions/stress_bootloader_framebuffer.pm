@@ -1,6 +1,6 @@
 # OpenIndiana's openQA tests
 #
-# Copyright © 2017 Michal Nowak
+# Copyright © 2017-2018 Michal Nowak
 #
 # Copying and distribution of this file, with or without modification,
 # are permitted in any medium without royalty provided the copyright
@@ -14,7 +14,7 @@ use base 'installbasetest';
 use strict;
 use testapi;
 
-sub run() {
+sub run {
     assert_screen 'sea-bios-splash';
     assert_screen 'bootloader-menu-main-screen-media-boot-textmode';
     send_key '3';

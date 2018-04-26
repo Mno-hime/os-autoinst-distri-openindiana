@@ -1,6 +1,6 @@
 # OpenIndiana's openQA tests
 #
-# Copyright © 2017 Michal Nowak
+# Copyright © 2017-2018 Michal Nowak
 #
 # Copying and distribution of this file, with or without modification,
 # are permitted in any medium without royalty provided the copyright
@@ -30,7 +30,7 @@ END\n);
     type_string "exit\n";
 }
 
-sub run() {
+sub run {
     pre_bootmenu_setup;
     bootloader_dvd;
     # On UEFI illumos vga console is currently not initialized

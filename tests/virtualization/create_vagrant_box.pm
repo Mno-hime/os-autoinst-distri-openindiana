@@ -1,6 +1,6 @@
 # OpenIndiana's openQA tests
 #
-# Copyright © 2017 Michal Nowak
+# Copyright © 2017-2018 Michal Nowak
 #
 # Copying and distribution of this file, with or without modification,
 # are permitted in any medium without royalty provided the copyright
@@ -35,7 +35,7 @@ sub run {
     }
 }
 
-sub test_flags() {
+sub test_flags {
     return {fatal => 1};
 }
 

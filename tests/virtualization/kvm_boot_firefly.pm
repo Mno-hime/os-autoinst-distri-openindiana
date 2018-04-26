@@ -18,7 +18,7 @@ use strict;
 use testapi;
 use utils 'deploy_kvm';
 
-sub run() {
+sub run {
     select_console 'user-console';
 
     # Get the image

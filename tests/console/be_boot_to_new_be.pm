@@ -1,6 +1,6 @@
 # OpenIndiana's openQA tests
 #
-# Copyright © 2017 Michal Nowak
+# Copyright © 2017-2018 Michal Nowak
 #
 # Copying and distribution of this file, with or without modification,
 # are permitted in any medium without royalty provided the copyright
@@ -15,7 +15,7 @@ use strict;
 use testapi;
 use utils qw(pkg_call wait_boot power_action);
 
-sub run() {
+sub run {
     select_console 'user-console';
 
     my $get_nr_be = 'beadm list | grep -w NR | awk \'{ print $1 }\'';
@@ -52,7 +52,7 @@ sub run() {
     assert_script_sudo("beadm list");
 }
 
-sub test_flags() {
+sub test_flags {
     return {fatal => 1};
 }
 

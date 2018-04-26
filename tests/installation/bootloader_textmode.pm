@@ -1,6 +1,6 @@
 # OpenIndiana's openQA tests
 #
-# Copyright © 2017 Michal Nowak
+# Copyright © 2017-2018 Michal Nowak
 #
 # Copying and distribution of this file, with or without modification,
 # are permitted in any medium without royalty provided the copyright
@@ -16,7 +16,7 @@ use testapi;
 use utils;
 use installer 'text_installer';
 
-sub run() {
+sub run {
     pre_bootmenu_setup;
     bootloader_dvd if get_var('BUILD') >= 20161030;
     firstboot_setup;

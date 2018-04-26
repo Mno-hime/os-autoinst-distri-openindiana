@@ -1,6 +1,6 @@
 # OpenIndiana's openQA tests
 #
-# Copyright © 2017 Michal Nowak
+# Copyright © 2017-2018 Michal Nowak
 #
 # Copying and distribution of this file, with or without modification,
 # are permitted in any medium without royalty provided the copyright
@@ -14,7 +14,7 @@ use base 'consoletest';
 use strict;
 use testapi;
 
-sub run() {
+sub run {
     select_console 'user-console';
 
     assert_script_run 'zpool status';
@@ -22,7 +22,7 @@ sub run() {
     assert_script_run 'zpool status | grep ' . get_var('ROOT_POOL_TYPE') if get_var('ROOT_POOL_TYPE');
 }
 
-sub test_flags() {
+sub test_flags {
     return {milestone => get_var('PUBLISH_HDD_1') ? 0 : 1};
 }
 

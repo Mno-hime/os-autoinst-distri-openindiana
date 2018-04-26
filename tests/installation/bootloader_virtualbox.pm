@@ -41,7 +41,7 @@ sub copy_medium_to_cache {
     return "${cachedir}/${medium}";
 }
 
-sub run() {
+sub run {
     my $svirt = select_console('svirt');
     my $name  = $svirt->name;
 
@@ -112,7 +112,7 @@ sub run() {
     select_console('sut');
 }
 
-sub test_flags() {
+sub test_flags {
     return {fatal => 1};
 }
 

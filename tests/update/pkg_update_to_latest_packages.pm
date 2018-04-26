@@ -15,7 +15,7 @@ use strict;
 use testapi;
 use utils qw(pkg_call wait_boot power_action);
 
-sub run() {
+sub run {
     if (check_var('DESKTOP', 'mate')) {
         x11_start_program 'xterm';
     }
