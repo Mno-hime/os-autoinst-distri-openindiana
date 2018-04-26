@@ -14,6 +14,7 @@ use base 'consoletest';
 use strict;
 use testapi;
 use utils;
+use is_utils 'is_minimal';
 
 sub run {
     my ($self) = @_;
@@ -27,7 +28,7 @@ sub run {
         type_password;
         send_key 'ret';
         pkg_set_flush_content_cache if get_var('PUBLISH_HDD_1');
-        if (get_var('FLAVOR', '') =~ /Minimal/) {
+        if (is_minimal) {
             # Can't use pkg_call() as we don't have sudo, yet.
             assert_script_run('pkg install sudo wget', 700);
         }

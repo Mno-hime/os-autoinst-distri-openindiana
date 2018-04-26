@@ -14,6 +14,7 @@ use base 'installbasetest';
 use strict;
 use testapi;
 use utils;
+use is_utils 'is_minimal';
 use installer 'text_installer';
 
 sub run {
