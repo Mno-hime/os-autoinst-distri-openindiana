@@ -42,6 +42,7 @@ our @EXPORT = qw(
   deploy_kvm
   assert_shutdown_and_restore_system
   power_action
+  get_vbox_guest_additions
 );
 
 # Function wrapping 'pkg' command with allowed return codes, timeout and logging facility.
@@ -463,6 +464,12 @@ sub power_action {
             console('svirt')->start_serial_grab;
         }
     }
+}
+
+# Download VirtualBox Guest Additions ISO medium of the version we run on the host
+sub get_vbox_guest_additions {
+    my $vboxver = '5.2.10';
+    assert_script_run 'wget -O VBoxGuestAdditions.iso ' . data_url("vagrant/VBoxGuestAdditions_$vboxver.iso");
 }
 
 1;
