@@ -1,6 +1,6 @@
 # OpenIndiana's openQA tests
 #
-# Copyright © 2017 Michal Nowak
+# Copyright © 2017-2018 Michal Nowak
 #
 # Copying and distribution of this file, with or without modification,
 # are permitted in any medium without royalty provided the copyright
@@ -15,7 +15,7 @@ use strict;
 use testapi;
 use utils 'pkg_call';
 
-sub run() {
+sub run {
     select_console 'user-console';
 
     pkg_call('uninstall dash', sudo     => 1);

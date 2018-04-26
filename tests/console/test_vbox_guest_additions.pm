@@ -13,7 +13,7 @@
 use base 'consoletest';
 use strict;
 use testapi;
-use utils;
+use utils qw(pkg_call get_vbox_guest_additions wait_boot power_action);
 
 sub test_vbox_props {
     assert_script_run 'modinfo | grep -w vboxguest';
@@ -25,9 +25,7 @@ sub test_vbox_props {
 sub run {
     select_console 'user-console';
 
-    # VirtualBox version we run on the host
-    my $vboxver = '5.2.8';
-    assert_script_run 'wget -O VBoxGuestAdditions.iso ' . data_url("vagrant/VBoxGuestAdditions_$vboxver.iso");
+    get_vbox_guest_additions if check_var('VIRSH_VMM_FAMILY', 'virtualbox');
     # Configure guest management tools. $PACKER_BUILDER_TYPE is required by
     # the Vagrant 'vmtools' shell script.
     assert_script_run "export PACKER_BUILDER_TYPE=virtualbox";

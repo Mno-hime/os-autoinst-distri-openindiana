@@ -1,7 +1,7 @@
 # OpenIndiana's openQA tests
 #
 # Copyright © 2016 SUSE LLC
-# Copyright © 2017 Michal Nowak
+# Copyright © 2017-2018 Michal Nowak
 #
 # Copying and distribution of this file, with or without modification,
 # are permitted in any medium without royalty provided the copyright
@@ -19,7 +19,7 @@ use utils;
 
 use File::Basename;
 
-sub run() {
+sub run {
     my $vmm_type   = get_required_var('VIRSH_VMM_TYPE');
     my $vmm_family = get_required_var('VIRSH_VMM_FAMILY');
 
@@ -119,7 +119,7 @@ sub run() {
     select_console('sut') if $vmm_type eq 'hvm';
 }
 
-sub test_flags() {
+sub test_flags {
     return {fatal => 1};
 }
 

@@ -1,6 +1,6 @@
 # OpenIndiana's openQA tests
 #
-# Copyright © 2017 Michal Nowak
+# Copyright © 2017-2018 Michal Nowak
 #
 # Copying and distribution of this file, with or without modification,
 # are permitted in any medium without royalty provided the copyright
@@ -9,6 +9,7 @@
 
 # Summary: Make sure current OpenIndiana is able to build oi-userland
 #   based on https://wiki.openindiana.org/oi/Building+with+oi-userland
+#   and on https://wiki.openindiana.org/oi/Building+in+zones
 # Maintainer: Michal Nowak <mnowak@startmail.com>
 
 use base 'consoletest';
@@ -16,7 +17,7 @@ use strict;
 use testapi;
 use utils qw(pkg_call);
 
-sub run() {
+sub run {
     select_console 'user-console';
 
     # Install toolchain required for building OI-userland
@@ -39,7 +40,7 @@ sub run() {
     assert_script_sudo('gmake env-prep', 200);
     assert_script_run('gmake publish', 600);
 
-    # Make sure package was install from userland repository
+    # Make sure package was installed from the userland repository
     pkg_call('change-facet facet.version-lock.shell/parallel=false', sudo => 1);
     pkg_call('install parallel',                                     sudo => 1);
     pkg_call('info parallel');

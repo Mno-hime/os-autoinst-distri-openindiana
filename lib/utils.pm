@@ -42,6 +42,7 @@ our @EXPORT = qw(
   deploy_kvm
   assert_shutdown_and_restore_system
   power_action
+  get_vbox_guest_additions
 );
 
 # Function wrapping 'pkg' command with allowed return codes, timeout and logging facility.
@@ -326,18 +327,18 @@ sub save_and_upload_log {
 
 sub core_files_gathering {
     my %args = @_;
-    $args{nosudo} ||= 0;
-    my $sudo = $args{nosudo} ? '' : 'sudo';
+    my $sudo = $args{sudo};
     # Make sure `find`'s non-zero exit code won't kill the process
-    my $cores = script_output "$sudo find /home/ /root/ /var/ /tmp/ -type f -name 'core.[0-9]*' | tr -s '\n' ' '";
+    my $cores = script_output "$sudo find \$(getent passwd | cut -d: -f6 | grep -v '^/\$') -type f -name core -o -name 'core.[0-9]*' | tr -s '\n' ' ' || true";
     my @cores = split / /, $cores;
     foreach my $core (@cores) {
         save_and_upload_log("$sudo pmap $core",   "$core.pmap");
         save_and_upload_log("$sudo pstack $core", "$core.pstack");
-        script_run("$sudo xz -v $core");
-        upload_logs("$sudo core.xz", failok => 1);
-        my $title  = script_output "$sudo awk '/core/ {print \$NF}' $core.pstack" . '.core';
-        my $output = script_output "$sudo cat $core.pstack";
+        assert_script_run("$sudo xz -v $core");
+        upload_logs("$core.xz", failok => 1);
+        assert_script_run("rm $core.xz");
+        my $title  = '[core] ' . script_output("$sudo head -n1 $core.pstack | sed 's/.*: *//'");
+        my $output = script_output("$sudo cat $core.pstack");
         record_info($title, $output, result => 'softfail');
     }
 }
@@ -345,9 +346,17 @@ sub core_files_gathering {
 sub system_log_gathering {
     return if check_var('VIRSH_VMM_FAMILY', 'xen');    # no network
     my %args = @_;
-    $args{nosudo} ||= 0;
-    my $sudo = $args{nosudo} ? '' : 'sudo';
-    core_files_gathering(nosudo => $args{nosudo});
+    my $sudo;
+    if (!defined($args{sudo})) {
+        $sudo = 'sudo';
+    }
+    elsif ($args{sudo}) {
+        $sudo = $args{sudo};
+    }
+    else {
+        $sudo = '';
+    }
+    core_files_gathering(sudo => $sudo);
     script_run('curl -O ' . data_url('utils/system_log_gathering.sh'));
     script_run("bash system_log_gathering.sh $sudo");
     upload_logs('system_log_gathering.txz', failok => 1);
@@ -414,7 +423,16 @@ sub power_action {
             }
         }
         elsif (check_var('DESKTOP', 'textmode')) {
-            my $sudo = $args{nosudo} ? '' : 'sudo';
+            my $sudo;
+            if (!defined($args{sudo})) {
+                $sudo = 'sudo';
+            }
+            elsif ($args{sudo}) {
+                $sudo = $args{sudo};
+            }
+            else {
+                $sudo = '';
+            }
             type_string "$sudo $action\n";
         }
     }
@@ -446,6 +464,12 @@ sub power_action {
             console('svirt')->start_serial_grab;
         }
     }
+}
+
+# Download VirtualBox Guest Additions ISO medium of the version we run on the host
+sub get_vbox_guest_additions {
+    my $vboxver = '5.2.10';
+    assert_script_run 'wget -O VBoxGuestAdditions.iso ' . data_url("vagrant/VBoxGuestAdditions_$vboxver.iso");
 }
 
 1;

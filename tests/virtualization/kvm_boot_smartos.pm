@@ -1,6 +1,6 @@
 # OpenIndiana's openQA tests
 #
-# Copyright © 2017 Michal Nowak
+# Copyright © 2017-2018 Michal Nowak
 #
 # Copying and distribution of this file, with or without modification,
 # are permitted in any medium without royalty provided the copyright
@@ -17,7 +17,7 @@ use strict;
 use testapi;
 use utils 'deploy_kvm';
 
-sub run() {
+sub run {
     select_console 'user-console';
 
     my $image = 'smartos-20170330T015208Z.iso';

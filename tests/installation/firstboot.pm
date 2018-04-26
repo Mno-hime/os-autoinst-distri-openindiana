@@ -1,6 +1,6 @@
 # OpenIndiana's openQA tests
 #
-# Copyright © 2017 Michal Nowak
+# Copyright © 2017-2018 Michal Nowak
 #
 # Copying and distribution of this file, with or without modification,
 # are permitted in any medium without royalty provided the copyright
@@ -14,6 +14,7 @@ use base 'consoletest';
 use strict;
 use testapi;
 use utils;
+use is_utils 'is_minimal';
 
 sub run {
     my ($self) = @_;
@@ -27,7 +28,7 @@ sub run {
         type_password;
         send_key 'ret';
         pkg_set_flush_content_cache if get_var('PUBLISH_HDD_1');
-        if (get_var('FLAVOR', '') =~ /Minimal/) {
+        if (is_minimal) {
             # Can't use pkg_call() as we don't have sudo, yet.
             assert_script_run('pkg install sudo wget', 700);
         }
@@ -89,7 +90,7 @@ sub run {
     }
 }
 
-sub test_flags() {
+sub test_flags {
     return {fatal => 1, milestone => get_var('PUBLISH_HDD_1') ? 0 : 1};
 }
 

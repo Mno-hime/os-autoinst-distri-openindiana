@@ -1,6 +1,6 @@
 # OpenIndiana's openQA tests
 #
-# Copyright © 2017 Michal Nowak
+# Copyright © 2017-2018 Michal Nowak
 #
 # Copying and distribution of this file, with or without modification,
 # are permitted in any medium without royalty provided the copyright
@@ -14,9 +14,10 @@ use base 'installbasetest';
 use strict;
 use testapi;
 use utils;
+use is_utils 'is_minimal';
 use installer 'text_installer';
 
-sub run() {
+sub run {
     pre_bootmenu_setup;
     bootloader_dvd if get_var('BUILD') >= 20161030;
     firstboot_setup;
@@ -24,6 +25,7 @@ sub run() {
     send_key '3';
     send_key 'ret';
     sleep 30;
+    system_log_gathering(sudo => is_minimal() ? '' : undef);
     type_string "clear\n";
     type_string "tail -F /tmp/install_log > /dev/$testapi::serialdev &\n";
     type_string "exit\n";
@@ -42,9 +44,9 @@ sub run() {
     # Upload various logs
     unless (check_var('VIRSH_VMM_FAMILY', 'xen')) {
         upload_logs('/tmp/install_log');
-        system_log_gathering(nosudo => 1);
+        system_log_gathering(sudo => 0);
     }
-    power_action('reboot', nosudo => 1);
+    power_action('reboot', sudo => 0);
 }
 
 1;

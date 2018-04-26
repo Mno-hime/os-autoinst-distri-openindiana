@@ -1,6 +1,6 @@
 # OpenIndiana's openQA tests
 #
-# Copyright © 2017 Michal Nowak
+# Copyright © 2017-2018 Michal Nowak
 #
 # Copying and distribution of this file, with or without modification,
 # are permitted in any medium without royalty provided the copyright
@@ -15,11 +15,11 @@ use strict;
 use testapi;
 use utils 'wait_boot';
 
-sub run() {
+sub run {
     wait_boot;
 }
 
-sub test_flags() {
+sub test_flags {
     return {fatal => 1, milestone => get_var('PUBLISH_HDD_1') ? 0 : 1};
 }
 

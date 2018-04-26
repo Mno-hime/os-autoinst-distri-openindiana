@@ -2,7 +2,7 @@
 #
 # Copyright © 2009-2013 Bernhard M. Wiedemann
 # Copyright © 2012-2017 SUSE LLC
-# Copyright © 2017 Michal Nowak
+# Copyright © 2017-2018 Michal Nowak
 #
 # Copying and distribution of this file, with or without modification,
 # are permitted in any medium without royalty provided the copyright
@@ -27,7 +27,7 @@ sub handle_password_prompt {
     send_key('ret');
 }
 
-sub init() {
+sub init {
     my ($self) = @_;
 
     $self->SUPER::init();

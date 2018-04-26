@@ -15,7 +15,7 @@ use strict;
 use testapi;
 use utils 'pkg_call';
 
-sub run() {
+sub run {
     select_console 'user-console';
 
     pkg_call('install gnupg', sudo => 1);    # gpg2 binary
@@ -43,7 +43,7 @@ sub run() {
     assert_script_run 'MANPATH=/opt/local/man:$MANPATH';
 }
 
-sub test_flags() {
+sub test_flags {
     return {fatal => 1, milestone => 1};
 }
 

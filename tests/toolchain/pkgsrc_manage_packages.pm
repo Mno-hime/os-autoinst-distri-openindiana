@@ -1,6 +1,6 @@
 # OpenIndiana's openQA tests
 #
-# Copyright © 2017 Michal Nowak
+# Copyright © 2017-2018 Michal Nowak
 #
 # Copying and distribution of this file, with or without modification,
 # are permitted in any medium without royalty provided the copyright
@@ -14,7 +14,7 @@ use base 'consoletest';
 use strict;
 use testapi;
 
-sub run() {
+sub run {
     select_console 'user-console';
 
     # See what packages are installed.
