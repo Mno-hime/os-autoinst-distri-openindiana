@@ -23,12 +23,12 @@ sub post_fail_hook {
             send_key 'ret';
             assert_screen 'vt-installation';
         }
-        system_log_gathering(nosudo => 1);
+        system_log_gathering(sudo => 0);
     }
     elsif (check_var('DESKTOP', 'mate')) {
         x11_start_program('sudo xterm');
         assert_screen 'xterm-started';
-        system_log_gathering(nosudo => 1);
+        system_log_gathering(sudo => 0);
     }
 }
 

@@ -24,6 +24,7 @@ sub run {
     send_key '3';
     send_key 'ret';
     sleep 30;
+    system_log_gathering(sudo => is_minimal() ? '' : undef);
     type_string "clear\n";
     type_string "tail -F /tmp/install_log > /dev/$testapi::serialdev &\n";
     type_string "exit\n";
@@ -42,9 +43,9 @@ sub run {
     # Upload various logs
     unless (check_var('VIRSH_VMM_FAMILY', 'xen')) {
         upload_logs('/tmp/install_log');
-        system_log_gathering(nosudo => 1);
+        system_log_gathering(sudo => 0);
     }
-    power_action('reboot', nosudo => 1);
+    power_action('reboot', sudo => 0);
 }
 
 1;
