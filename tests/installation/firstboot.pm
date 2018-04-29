@@ -29,8 +29,10 @@ sub run {
         send_key 'ret';
         pkg_set_flush_content_cache if get_var('PUBLISH_HDD_1');
         if (is_minimal) {
-            # Can't use pkg_call() as we don't have sudo, yet.
-            assert_script_run('pkg install sudo wget', 700);
+            # Can't use pkg_call() as we likely don't have sudo in Minimal install, yet
+            assert_script_run('pkg info sudo wget || pkg install sudo wget', 700);
+            # Test assert_script_sudo(). Makes sure we have both `sudo` and `wget`.
+            assert_script_sudo('pkg info wget');
         }
         else {
             assert_script_run("sed -i '/$testapi::username/d' /etc/sudoers");
