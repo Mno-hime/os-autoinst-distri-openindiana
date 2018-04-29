@@ -14,7 +14,6 @@ use base 'installbasetest';
 use strict;
 use testapi;
 use utils;
-use is_utils 'is_minimal';
 use installer 'text_installer';
 
 sub run {
@@ -25,7 +24,6 @@ sub run {
     send_key '3';
     send_key 'ret';
     sleep 30;
-    system_log_gathering(sudo => is_minimal() ? '' : undef);
     type_string "clear\n";
     type_string "tail -F /tmp/install_log > /dev/$testapi::serialdev &\n";
     type_string "exit\n";
