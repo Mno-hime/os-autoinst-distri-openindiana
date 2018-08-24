@@ -126,9 +126,7 @@ sub run {
         send_key 'alt-i';
 
         # Make sure error window about volume mounting is closed
-        if (check_screen('cannot-mount-volume')) {
-            send_key 'alt-o';
-        }
+        send_key 'alt-o' if check_screen('cannot-mount-volume', 120);
 
         # Installation from USB (EHCI-only currently) is really slow
         my $timeout = (get_var('USBBOOT') || check_var('VBOXHDDTYPE2', 'usb')) ? 3000 : 1200;
