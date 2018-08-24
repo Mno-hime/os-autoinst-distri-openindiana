@@ -1,6 +1,7 @@
 # OpenIndiana's openQA tests
 #
 # Copyright © 2018 Michal Nowak
+# Copyright © 2018 SUSE LLC
 #
 # Copying and distribution of this file, with or without modification,
 # are permitted in any medium without royalty provided the copyright
@@ -16,7 +17,11 @@ use testapi;
 
 sub run {
     assert_screen('uefi-firmware-banner');
-    send_key_until_needlematch('uefi-menu-home', 'f2', 10, 0.5);
+    # we need to reduce this waiting time as much as possible
+    while (!check_screen('uefi-menu-home', 0, no_wait => 1)) {
+        send_key 'f2';
+        sleep 0.1;
+    }
     send_key 'down';
     send_key 'ret';
     assert_screen('uefi-menu-device-manager');
