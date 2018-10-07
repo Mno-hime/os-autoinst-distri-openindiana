@@ -444,6 +444,7 @@ sub power_action {
     }
     else {
         my $timeout = 60;
+        $timeout *= 2 if check_var('DESKTOP', 'mate');
         if ($action eq 'poweroff') {
             assert_shutdown($timeout);
             # This is a dirty workaround to fix Vagrant box generation (mostly).
