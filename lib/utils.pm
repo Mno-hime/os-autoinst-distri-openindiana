@@ -408,15 +408,13 @@ sub power_action {
         console('sut')->disable_vnc_stalls;
         console('svirt')->stop_serial_grab;
     }
-    if ($action eq 'poweroff') {
-        power('acpi');
-    }
-    elsif ($action eq 'reboot') {
+    if ($action eq 'reboot' || $action eq 'poweroff') {
         if (check_var('DESKTOP', 'mate')) {
             select_console 'x11';
             x11_start_program('mate-session-save --shutdown-dialog', undef, {terminal => 0, no_wait => 1});
             assert_screen 'logoutdialog', 90;
-            send_key 'alt-r';
+            send_key 'alt-r' if $action eq 'reboot';
+            send_key 'alt-s' if $action eq 'poweroff';
             if (check_screen('mate-program-still-running', 5)) {
                 record_soft_failure 'Some program is still running';
                 assert_and_click('shut-down-anyway', 'left', 10, 2);
