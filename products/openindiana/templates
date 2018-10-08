@@ -851,6 +851,7 @@
                         { key => "CDMODEL", value => "ide-cd" },
                         { key => "QEMUCPU", value => "host" },
                         { key => "QEMUVGA", value => "qxl" },
+                        { key => "VIRTIO_CONSOLE", value => 1 },
                         { key => "WORKER_CLASS", value => "qemu_x86_64" },
                       ],
                     },
@@ -861,7 +862,15 @@
                         { key => "CDMODEL", value => "ide-cd" },
                         { key => "QEMUCPU", value => "host" },
                         { key => "UEFI", value => 1 },
-                        { key => "UEFI_PFLASH", value => 1 },
+                        { key => "UEFI_PFLASH", value => "null" },
+                        {
+                          key => "UEFI_PFLASH_CODE",
+                          value => "/usr/share/qemu/ovmf-x86_64-ms-code.bin",
+                        },
+                        {
+                          key => "UEFI_PFLASH_VARS",
+                          value => "/usr/share/qemu/ovmf-x86_64-ms-vars.bin",
+                        },
                         { key => "WORKER_CLASS", value => "qemu_x86_64" },
                       ],
                     },
@@ -871,6 +880,7 @@
                       settings => [
                         { key => "CDMODEL", value => "ide-cd" },
                         { key => "QEMUCPU", value => "host" },
+                        { key => "VIRTIO_CONSOLE", value => 1 },
                         { key => "WORKER_CLASS", value => "qemu_x86_64" },
                       ],
                     },
@@ -881,6 +891,7 @@
                         { key => "CDMODEL", value => "ide-cd" },
                         { key => "QEMUCPU", value => "host" },
                         { key => "QEMUVGA", value => "std" },
+                        { key => "VIRTIO_CONSOLE", value => 1 },
                         { key => "WORKER_CLASS", value => "qemu_x86_64" },
                       ],
                     },
@@ -1006,6 +1017,7 @@
                         { key => "CDMODEL", value => "ide-cd" },
                         { key => "HDDMODEL", value => "nvme" },
                         { key => "QEMUCPU", value => "host" },
+                        { key => "VIRTIO_CONSOLE", value => 1 },
                         { key => "WORKER_CLASS", value => "qemu_x86_64" },
                       ],
                     },
@@ -1015,6 +1027,7 @@
                       settings => [
                         { key => "CDMODEL", value => "ide-cd" },
                         { key => "QEMUCPU", value => "host" },
+                        { key => "VIRTIO_CONSOLE", value => 1 },
                         { key => "WORKER_CLASS", value => "qemu_nestedvnc_x86_64" },
                       ],
                     },
@@ -1091,6 +1104,7 @@
                       flavor   => "LiveUSB",
                       settings => [
                                     { key => "QEMURAM", value => 2048 },
+                                    { key => "TIMEOUT_SCALE", value => 2 },
                                     { key => "USBBOOT", value => 1 },
                                   ],
                       version  => "hipster",
@@ -1101,6 +1115,7 @@
                       flavor   => "ServerUSB",
                       settings => [
                                     { key => "QEMURAM", value => 2048 },
+                                    { key => "TIMEOUT_SCALE", value => 2 },
                                     { key => "USBBOOT", value => 1 },
                                   ],
                       version  => "hipster",
@@ -1111,6 +1126,7 @@
                       flavor   => "MinimalUSB",
                       settings => [
                                     { key => "QEMURAM", value => 2048 },
+                                    { key => "TIMEOUT_SCALE", value => 2 },
                                     { key => "USBBOOT", value => 1 },
                                   ],
                       version  => "hipster",
@@ -1360,6 +1376,7 @@
                           key => "HDD_1",
                           value => "openindiana-hipster-%ARCH%-%BUILD%-Server\@%MACHINE%.qcow2",
                         },
+                        { key => "QEMURAM", value => 3072 },
                       ],
                     },
                     {
@@ -1551,21 +1568,6 @@
                       ],
                     },
                     {
-                      description => "Update installed 2018.04 Live system to latest packages in oi/hipster branch.",
-                      name => "upgrade_mate_20180427",
-                      settings => [
-                        { key => "BASE_BUILD", value => 20180427 },
-                        { key => "BOOTFROM", value => "c" },
-                        { key => "DESKTOP", value => "mate" },
-                        { key => "FEATURES", value => "update,consoletests" },
-                        {
-                          key => "HDD_1",
-                          value => "%DISTRI%-%VERSION%-%ARCH%-20180427-%FLAVOR%\@%MACHINE%.qcow2",
-                        },
-                        { key => "QEMURAM", value => 3072 },
-                      ],
-                    },
-                    {
                       description => "Update installed 2017.10 Server/Minimal system to latest packages in oi/hipster branch.",
                       name => "upgrade_textmode_vbox_20171031",
                       settings => [
@@ -1623,6 +1625,22 @@
                           value => "%DISTRI%-%VERSION%-%ARCH%-20180427-%FLAVOR%\@%MACHINE%.vdi",
                         },
                         { key => "QEMURAM", value => 3072 },
+                      ],
+                    },
+                    {
+                      description => "Update installed 2018.04 Live system to latest packages in oi/hipster branch.\n\nNeeds VIRTIO_CONSOLE=0 otherwise:\n\nCannot mount root on /pci\@0,0/pci1af4,2\@6/blkdev\@0,0:a fstype zfs\npanic[cpu0]/thread=fffffffffbc4a000: vfs_mountroot: cannot mount root",
+                      name => "upgrade_mate_20180427",
+                      settings => [
+                        { key => "BASE_BUILD", value => 20180427 },
+                        { key => "BOOTFROM", value => "c" },
+                        { key => "DESKTOP", value => "mate" },
+                        { key => "FEATURES", value => "update,consoletests" },
+                        {
+                          key => "HDD_1",
+                          value => "%DISTRI%-%VERSION%-%ARCH%-20180427-%FLAVOR%\@%MACHINE%.qcow2",
+                        },
+                        { key => "QEMURAM", value => 3072 },
+                        { key => "VIRTIO_CONSOLE", value => 0 },
                       ],
                     },
                   ],
