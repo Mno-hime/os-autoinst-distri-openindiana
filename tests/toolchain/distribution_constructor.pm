@@ -47,7 +47,7 @@ sub run {
         my $upload_filename_path = "$dc_root/media/$upload_filename";
         assert_script_sudo "mv $dc_root/media/OpenIndiana_${variant}_X86.$medium $upload_filename_path";
         for (1 .. 5) {    # Try to upload image up to five times
-            last unless upload_asset($upload_filename_path, 1, 0, 900);
+            last unless upload_asset($upload_filename_path, 1, 0, 3600);
         }
         record_info("$variant$medium", "$upload_filename uploaded successfully");
         # Save some space on openQA worker as OS image takes 40-45 GB
