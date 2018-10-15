@@ -28,7 +28,7 @@ sub run {
         pkg_call('set-publisher --non-sticky openindiana.org',                            sudo => 1);
         pkg_call('publisher');
     }
-    pkg_call('update', timeout => 2000, sudo => 1);
+    pkg_call('update --require-new-be', timeout => 2000, sudo => 1);
     # OpenIndiana releases before 2017.10 have tools which are unable
     # to cope with installing later kernels. Basically, tools before fix
     # for 8142 was integrated are unable to install kernel which has fix
