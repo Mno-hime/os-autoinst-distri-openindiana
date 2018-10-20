@@ -21,7 +21,7 @@ sub run {
     select_console 'user-console';
 
     # Get the image
-    my $image = 'alpine-virt-3.7.0-x86_64.iso';
+    my $image = 'alpine-virt-3.8.1-x86_64.iso';
     assert_script_run 'wget ' . data_url("virtualization/$image");
 
     deploy_kvm;
