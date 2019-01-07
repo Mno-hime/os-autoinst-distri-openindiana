@@ -21,7 +21,7 @@ sub run {
     select_console 'user-console';
 
     # Get the image
-    my $image = 'dfly-x86_64-5.2.2_REL.iso';
+    my $image = 'dfly-x86_64-5.4.1_REL.iso';
     assert_script_run("wget http://ftp.halifax.rwth-aachen.de/dragonflybsd/iso-images/${image}.bz2", 300);
     assert_script_run "bunzip2 -v ${image}.bz2";
 
