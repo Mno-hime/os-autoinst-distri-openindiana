@@ -24,7 +24,7 @@ client='/usr/share/openqa/script/client'
 asset_root=/var/lib/openqa/share/factory
 products=0
 if [[ "${dcbuild}" ]]; then
-    $client isos post hdd=openindiana-hipster-x86_64-${build}-Server@64bit.qcow2 DISTRI=openindiana-dcbuild VERSION=hipster FLAVOR=dcbuild ARCH=x86_64 BUILD=$build $filter && ((++products))
+    $client isos post hdd="openindiana-hipster-x86_64-${build}-Server@64bit.qcow2" DISTRI=openindiana-dcbuild VERSION=hipster FLAVOR=dcbuild ARCH=x86_64 BUILD="$build" "$filter" && ((++products))
 else
     for medium in iso usb; do
         for flavor in $flavors; do
@@ -39,14 +39,14 @@ else
                 mediumpathreal='iso'
             fi
             filepath="${asset_root}/${mediumpathreal}/OI-hipster-${mediumtype}-${build}.${medium}"
-            if [ ! -f ${filepath} ]; then
+            if [ ! -f "${filepath}" ]; then
                 filepath="${filepath/OI/fixed/OI}"
-                if [ ! -f ${filepath} ]; then
+                if [ ! -f "${filepath}" ]; then
                     continue;
                 fi
             fi
             echo -ne "  $flavor\t$arch\t$medium\t"
-            $client isos post iso=OI-hipster-${mediumtype}-${build}.${medium} DISTRI=openindiana VERSION=hipster FLAVOR=$flavor ARCH=$arch BUILD=$build "$filter" && ((++products))
+            $client isos post iso="OI-hipster-${mediumtype}-${build}.${medium}" DISTRI=openindiana VERSION=hipster FLAVOR="$flavor" ARCH=$arch BUILD="$build" "$filter" && ((++products))
         done
     done
 fi
